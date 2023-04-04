@@ -20,8 +20,8 @@ function M.search_git_root()
   if is_git then
     local git_root = M.find_git_root()
     if git_root then
-      require('telescope.builtin').find_files({ cwd = git_root })
       notify('Directorio de trabajo git: ' .. git_root, 'succes', { title = 'Gittory' })
+      require('telescope.builtin').find_files({ cwd = git_root })
     else
       notify('El repositorio tiene 10 o más de profundidad\nEl plugin no lo soporta por ahora.', 'info', { title = 'Gittory' })
     end

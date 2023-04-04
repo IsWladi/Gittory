@@ -1,5 +1,4 @@
 local notify = require('notify').setup({
-    position = "top_right",
     render = "compact",
 })
 

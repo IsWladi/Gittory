@@ -30,14 +30,17 @@ function M.find_git_root()
 end
 
 -- Function to search the entire working directory of the Git repository with Telescope
-function M.search_git_root(builtin)
+function M.search_git_root(builtin, args)
   builtin = builtin or require('telescope.builtin').find_files
+  args = args or {}
+
   local is_git = M.isGitRepository()
   if is_git then
     local git_root = M.find_git_root()
     if git_root then
       notify('working directory: ' .. git_root, 'succes', { title = 'Gittory', render = "compact" })
-      builtin({ cwd = git_root })
+      args.cwd = git_root
+      builtin(args)
     else
       notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
     end

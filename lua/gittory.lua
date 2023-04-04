@@ -1,4 +1,8 @@
-notify = require('notify')
+local notify = require('notify').setup({
+    position = "top_right",
+    render = "compact",
+})
+
 local M = {}
 
 -- Función para buscar el directorio raíz del repositorio de Git

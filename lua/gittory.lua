@@ -1,3 +1,4 @@
+notify = require('notify')
 local M = {}
 
 -- Función para buscar el directorio raíz del repositorio de Git
@@ -20,11 +21,12 @@ function M.search_git_root()
     local git_root = M.find_git_root()
     if git_root then
       require('telescope.builtin').find_files({ cwd = git_root })
+      notify('Directorio de trabajo git: ' .. git_root, 'succes', { title = 'Gittory' })
     else
-      print('El repositorio tiene más de 10 directorios superiores respecto al directorio de trabajo actual')
+      notify('El repositorio tiene 10 o más de profundidad\nEl plugin no lo soporta por ahora.', 'info', { title = 'Gittory' })
     end
   else
-    print('No es un repositorio de Git')
+    notify('No es un repositorio de Git', 'error', { title = 'Gittory' })
   end
 end
 

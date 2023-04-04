@@ -1,38 +1,10 @@
 local notify = require('notify')
 local M = {}
 
--- Función para buscar el directorio raíz del repositorio de Git
-function M.find_git_root()
-  local path = vim.loop.cwd()
-  local i = 0
-  while path:match('.:\\') and i < 10 do
-    if vim.fn.isdirectory(path .. '/.git') == 1 then
-      return path
-    end
-    path = vim.fn.fnamemodify(path, ':h')
-    i = i + 1
-  end
-end
-
--- Función para buscar en todo el directorio de trabajo del repositorio de Git con Telescope
-function M.search_git_root()
-  local is_git = M.isGitRepository()
-  if is_git then
-    local git_root = M.find_git_root()
-    if git_root then
-      notify('Directorio de trabajo git: ' .. git_root, 'succes', { title = 'Gittory', render = "compact" })
-      require('telescope.builtin').find_files({ cwd = git_root })
-    else
-      notify('El repositorio tiene 10 o más de profundidad\nEl plugin no lo soporta por ahora.', 'info', { title = 'Gittory' })
-    end
-  else
-    notify('No es un repositorio de Git', 'error', { title = 'Gittory' })
-  end
-end
-
+-- Function to check if the current directory is a Git repository
 function M.isGitRepository()
-  local isGit = os.execute('git status > NUL 2>&1') -- 0 si es un repositorio de Git, 1 si no lo es, el msg de retorno se guarda en NUL(se elimina)
-  if type(isGit) == 'number' then --si es lua 5.2 o superior el tipo de retorno es number
+  local isGit = os.execute('git status > NUL 2>&1') -- 0 if it is a Git repository, 1 if it is not, the return message is saved in NUL (it is deleted)
+  if type(isGit) == 'number' then -- if it is lua 5.2 or higher the return type is number
     isGit = (isGit == 0)
   end
   if isGit then
@@ -42,6 +14,35 @@ function M.isGitRepository()
   end
 end
 
+-- Function to find the root directory of the Git repository
+function M.find_git_root()
+  local path = vim.loop.cwd()
+  local home = vim.loop.os_homedir()
+  local i = 0
+  while path ~= home do
+    if vim.fn.isdirectory(path .. '/.git') == 1 then
+      return path
+    end
+    path = vim.fn.fnamemodify(path, ':h')
+    i = i + 1
+  end
+  return false
+end
 
+-- Function to search the entire working directory of the Git repository with Telescope
+function M.search_git_root()
+  local is_git = M.isGitRepository()
+  if is_git then
+    local git_root = M.find_git_root()
+    if git_root then
+      notify('working directory: ' .. git_root, 'succes', { title = 'Gittory', render = "compact" })
+      require('telescope.builtin').find_files({ cwd = git_root })
+    else
+      notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
+    end
+  else
+    notify('Not a Git repository', 'error', { title = 'Gittory' })
+  end
+end
 
 return M

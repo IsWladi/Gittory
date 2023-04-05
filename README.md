@@ -3,12 +3,25 @@
 ## Introduction
 Gittory is a Neovim plugin that provides functions for working with Git repositories. It allows you to use Telescope to search the entire working directory of the Git repository, regardless of your relative position within the repository. If there is no Git repository, the Telescope operation will be canceled.
 
+Imagine you have a project like this:
+  - root > ( imgs, js, css ) 
+  - js > ( chargeSomething.js, other.js, andother.js ) 
+so, you go with terminal to `cd ./root/js/` and you open neovim in this position, finally, when you use Telescope you'll notice you only see the files of `/js/` and for me, that's a problem, Gittory solve this.
+
+
 ## Features
-- `search_git_root(builtin, args)`: Searches the entire working directory of the Git repository with Telescope.
-  - example: `search_git_root(require('telescope.builtin').grep_string, {use_regex = true})`
+- `search_git_root(builtin, args)`: Searches the entire working directory of the Git repository with Telescope's builtin functions.
+
+
+## Dependencies
+Gittory depends on the following plugins:
+- notify.nvim
+- telescope.nvim
+
 
 ## Installation
-You can install Gittory using your preferred package manager. Here's an example using `lazy.nvim`:
+- This plugin does'nt have default keymaps.
+- You can install Gittory using your preferred package manager. Here's an example using `lazy.nvim`:
 
 ```lua
 return{
@@ -31,13 +44,14 @@ return{
 ```
 
 ## Usage
-To use Gittory’s search_git_root function, you can call it like this: require('gittory').search_git_root(). You can also pass in arguments to specify the Telescope builtin function and its arguments. For example: require('gittory').search_git_root(require('telescope.builtin').grep_string, {use_regex = true}).
+The plugin is very simple, in this lines of code you'll understand the usage:
 
-## Dependencies
-Gittory depends on the following plugins:
+![image](https://user-images.githubusercontent.com/83993271/229987331-9e0e1118-7263-4c9d-9c31-d0a7b3273cd8.png)
 
-- notify.nvim
-- telescope.nvim
+- To use Gittory’s `search_git_root()` function, you can call it like this: `require('gittory').search_git_root()`. 
+- You can also pass in arguments to specify the Telescope builtin function and its arguments. 
+  - For example: `require('gittory').search_git_root(require('telescope.builtin').grep_string, {use_regex = true})`.
+
 
 ## Contributing
 If you would like to contribute to the development of Gittory, you can do so by submitting a pull request or opening an issue on the project’s GitHub repository.

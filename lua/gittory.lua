@@ -38,7 +38,7 @@ function M.search_git_root(builtin, args)
   if is_git then
     local git_root = M.find_git_root()
     if git_root then
-      notify(' ' .. git_root, 'succes', { title = 'Gittory', render = "compact" })
+      notify(git_root, 'succes', { title = 'Gittory', render = "compact" })
       args.cwd = git_root
       builtin(args)
     else

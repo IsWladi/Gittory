@@ -13,33 +13,27 @@ Gittory depends on the following plugins:
 - notify.nvim
 - telescope.nvim
 
-## Usage
+## Installation and usage with lazy
 
-To use Gittory in your Neovim configuration:
+You can install Gittory using your preferred package manager. Here's an example using `lazy.nvim`:
 
 ```lua
---You must require it:
-local gittory = require('gittory')
+return{
+  {"Wladimir3984/gittory",
+    dependencies = {
+        {"nvim-telescope/telescope.nvim"},
+        {"rcarriga/nvim-notify"},
+    },
+    keys = {
+      { "<leader>ff", function() require('gittory').search_git_root() end, desc = '[telescope gittory] find files' },
 
---Then you can call the functions provided by the plugin. For example, to use builtin.find_files in the actual working directory of the Git repository:
-gittory.search_git_root()--If you don´t pass arguments the default is require('telescope.builtin').find_files, if you want to be explicit use: gittory.search_git_root(require('telescope.builtin').find_files)
+      { "<leader>fg", function() require('gittory').search_git_root(require('telescope.builtin').live_grep) end,
+      desc = '[telescope gittory] live grep' },
 
+      { "<CR>", function() require('gittory').search_git_root(require('telescope.builtin').grep_string,{use_regex = true}) end,
+      mode = "x", desc = '[telescope gittory] string grep visual mode with regex' },
+    },
+  }
+}
 
-You can set key mappings to call Telescope with Gittory’s functions:
-
-gittory = require("gittory")
-vim.keymap.set("n", "<leader>ff",
-              function() gittory.search_git_root() end,
-              { noremap = true, silent = true, desc = '[telescope gittory] find files' }
-              )
-
-vim.keymap.set("n", "<leader>fg",
-              function() gittory.search_git_root(require('telescope.builtin').live_grep) end,
-              { noremap = true, silent = true, desc = '[telescope gittory] live grep' }
-              )
-
-vim.keymap.set("x", "<CR>",
-              function() gittory.search_git_root(require('telescope.builtin').grep_string, {use_regex = true}) end,
-              { noremap = true, silent = true, desc = '[telescope gittory] string grep visual mode with regex' }
-              )
 ```

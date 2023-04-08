@@ -36,7 +36,10 @@ function M.search_git_root(builtin, args)
   builtin = builtin or require('telescope.builtin').find_files
   args = args or {}
 
-  vim.cmd("cd %:h") -- Change the current directory to the current file directory
+  if vim.fn.expand('%:p') ~= '' then
+    vim.cmd("cd %:h")
+  end
+
   local is_git = M.isGitRepository()
   if is_git then
     local git_root = M.find_git_root()

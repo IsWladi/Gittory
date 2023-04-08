@@ -45,7 +45,8 @@ function M.search_git_root(builtin, args)
       notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
     end
   else
-    notify('Not a Git repository', 'error', { title = 'Gittory' })
+    notify('This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory' })
+    builtin(args)
   end
 end
 

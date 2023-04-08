@@ -37,9 +37,6 @@ function M.search_git_root(builtin, args)
   builtin = builtin or require('telescope.builtin').find_files
   args = args or {}
 
-  local buffer_dir = vim.fn.expand('%:p:h')
-  vim.api.nvim_set_current_dir(buffer_dir)
-
   local is_git = M.isGitRepository()
   if is_git then
     local git_root = M.find_git_root()

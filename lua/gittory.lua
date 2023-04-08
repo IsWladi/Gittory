@@ -3,8 +3,6 @@ local M = {}
 
 -- Function to check if the current directory is a Git repository
 function M.isGitRepository()
-  local buffer_dir = vim.fn.expand('%:p:h')
-  vim.api.nvim_set_current_dir(buffer_dir)
 
   local null_device = (vim.loop.os_uname().sysname == 'Windows') and 'NUL' or '/dev/null'
   local isGit = os.execute('git status > ' .. null_device .. ' 2>&1')
@@ -38,6 +36,9 @@ end
 function M.search_git_root(builtin, args)
   builtin = builtin or require('telescope.builtin').find_files
   args = args or {}
+
+  local buffer_dir = vim.fn.expand('%:p:h')
+  vim.api.nvim_set_current_dir(buffer_dir)
 
   local is_git = M.isGitRepository()
   if is_git then

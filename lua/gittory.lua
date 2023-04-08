@@ -4,8 +4,10 @@ local M = {}
 -- Function to check if the current directory is a Git repository
 function M.isGitRepository()
   local buffer_dir = vim.fn.expand('%:p:h')
+  vim.api.nvim_set_current_dir(buffer_dir)
+
   local null_device = (vim.loop.os_uname().sysname == 'Windows') and 'NUL' or '/dev/null'
-  local isGit = os.execute('cd ' .. buffer_dir .. ' && git status > ' .. null_device .. ' 2>&1')
+  local isGit = os.execute('git status > ' .. null_device .. ' 2>&1')
 
   if type(isGit) == 'number' then -- if it is lua 5.2 or higher the return type is number
     isGit = (isGit == 0)

@@ -63,7 +63,7 @@ function M.telescope_home()
   local args = {}
   args.cwd = os.getenv("HOME")
   builtin(args)
-  notify(os.getenv("HOME"), 'info', { title = 'Gittory Home', render = "compact" })
+  notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
 end
 
 return M

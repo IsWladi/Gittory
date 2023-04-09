@@ -38,6 +38,9 @@ function M.search_git_root(builtin, args)
 
   if vim.fn.expand('%:p') ~= '' then
     vim.cmd("cd %:h")
+  else
+    local current_dir = getcwd()
+    vim.cmd("cd " .. current_dir)
   end
 
   local is_git = M.isGitRepository()

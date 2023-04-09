@@ -60,8 +60,10 @@ end
 
 function M.telescope_home()
   local builtin = require('telescope.builtin').find_files
+  actual_path = vim.fn.expand('%:p')
   vim.cmd("cd $HOME")
   builtin()
+  vim.cmd("cd " .. actual_path)
   notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
 end
 

@@ -60,9 +60,8 @@ end
 
 function M.telescope_home()
   local builtin = require('telescope.builtin').find_files
-  local args = {}
-  args.cwd = os.getenv("HOME")
-  builtin(args)
+  vim.cmd("cd")
+  builtin()
   notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
 end
 

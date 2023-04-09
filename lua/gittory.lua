@@ -56,4 +56,14 @@ function M.search_git_root(builtin, args)
   end
 end
 
+-- No git functions
+
+function M.telescope_home()
+  local builtin = require('telescope.builtin').find_files
+  local args = {}
+  args.cwd = os.getenv("HOME")
+  builtin(args)
+  notify(os.getenv("HOME"), 'info', { title = 'Gittory Home', render = "compact" })
+end
+
 return M

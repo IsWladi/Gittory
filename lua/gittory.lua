@@ -70,8 +70,7 @@ function M.telescope_home()
   if vim.fn.expand('%:p') ~= '' then
     local builtin = require('telescope.builtin').find_files
     local actual_path =  vim.fn.getcwd()
-    vim.cmd("cd $HOME")
-    builtin()
+    builtin({ cwd = vim.fn.expand('$HOME') })
     vim.schedule(function()
       vim.cmd("cd " .. actual_path)
     end)

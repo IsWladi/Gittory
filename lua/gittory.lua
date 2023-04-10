@@ -38,9 +38,6 @@ function M.search_git_root(builtin, args)
 
   if vim.fn.expand('%:p') ~= '' then
     vim.cmd("cd %:h")
-  else
-    local current_dir = io.popen(":pwd"):read("*a")
-    vim.cmd("cd " .. current_dir)
   end
 
   local is_git = M.isGitRepository()
@@ -62,12 +59,16 @@ end
 -- No git functions
 
 function M.telescope_home()
-  local builtin = require('telescope.builtin').find_files
-  actual_path = vim.fn.expand('%:h')
-  vim.cmd("cd $HOME")
-  builtin()
-  vim.cmd("cd " .. actual_path)
-  notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
+  if vim.fn.expand('%:p') ~= '' then
+    local builtin = require('telescope.builtin').find_files
+    actual_path = vim.fn.expand('%:h')
+    vim.cmd("cd $HOME")
+    builtin()
+    vim.cmd("cd " .. actual_path)
+    notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
+  else
+    notify("For cause of a bug, telescope_home doesn't activate in a empty buffer", 'error', { title = 'Gittory Home', render = "compact" })
+  end
 end
 
 return M

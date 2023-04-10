@@ -77,12 +77,22 @@ return{
         {"rcarriga/nvim-notify"},
     },
     keys = {
-      { "<leader>ff", function() require('gittory').search_git_root() end, desc = '[telescope gittory] find files' },
+      { "<leader>ff", function() 
+                        require('gittory').search_git_root() -- For default use find_files
+                      end, 
+      desc = '[telescope gittory] find files' },
 
-      { "<leader>fg", function() require('gittory').search_git_root(require('telescope.builtin').live_grep) end,
+      { "<leader>fg", function() 
+                        local liveGrep = require('telescope.builtin').live_grep
+                        require('gittory').search_git_root(liveGrep) 
+                      end,
       desc = '[telescope gittory] live grep' },
 
-      { "<CR>", function() require('gittory').search_git_root(require('telescope.builtin').grep_string,{use_regex = true}) end,
+      { "<CR>", function() 
+                  local grepString = require('telescope.builtin').grep_string
+                  local args = {use_regex = true}
+                  require('gittory').search_git_root(grepString, args) 
+                end,
       mode = "x", desc = '[telescope gittory] string grep visual mode with regex' },
     },
   }    

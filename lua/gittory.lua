@@ -70,10 +70,13 @@ function M.telescope_home()
   local actual_path =  vim.fn.getcwd()
   vim.cmd("cd $HOME")
   builtin({
-  default_selection_index = function()
-      vim.cmd("cd " .. actual_path)
-  end
-  })
+    attach_mappings = function(prompt_bufnr)
+        actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            vim.cmd("cd " .. actual_path)
+        end)
+        return true
+    end  })
   notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
 end
 

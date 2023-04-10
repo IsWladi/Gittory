@@ -39,7 +39,7 @@ function M.search_git_root(builtin, args)
   if vim.fn.expand('%:p') ~= '' then
     vim.cmd("cd %:h")
   else
-    local current_dir = getcwd()
+    local current_dir = io.popen(":pwd"):read("*a")
     vim.cmd("cd " .. current_dir)
   end
 

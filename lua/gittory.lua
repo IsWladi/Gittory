@@ -74,14 +74,14 @@ function M.telescope_home()
     local actions_set = require('telescope.actions.set')
     vim.cmd("cd $HOME")
     builtin({
-      attach_mappings = function(prompt_bufnr)
+      attach_mappings = function(prompt_(bufnr)
           actions.select_default:replace(function()
               actions_set.edit(prompt_bufnr, 'edit')
               actions.close(prompt_bufnr)
               vim.cmd("cd " .. actual_path)
           end)
           return true
-      end  })
+      end  }))
     notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
   else
     notify("Telescope_home does not work well from an empty buffer, it will be fixed soon.", 'error',

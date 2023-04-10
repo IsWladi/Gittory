@@ -71,10 +71,12 @@ function M.telescope_home()
     local builtin = require('telescope.builtin').find_files
     local actual_path =  vim.fn.getcwd()
     local actions = require('telescope.actions')
+    local actions_set = require('telescope.actions.set')
     vim.cmd("cd $HOME")
     builtin({
       attach_mappings = function(prompt_bufnr)
           actions.select_default:replace(function()
+              actions_set.edit(prompt_bufnr, 'edit')
               actions.close(prompt_bufnr)
               vim.cmd("cd " .. actual_path)
           end)

@@ -66,19 +66,27 @@ end
 -- No git functions
 
 function M.telescope_home()
-  local builtin = require('telescope.builtin').find_files
-  local actual_path =  vim.fn.getcwd()
-  local actions = require('telescope.actions')
-  vim.cmd("cd $HOME")
-  builtin({
-    attach_mappings = function(prompt_bufnr)
-        actions.select_default:replace(function()
-            actions.close(prompt_bufnr)
-            vim.cmd("cd " .. actual_path)
-        end)
-        return true
-    end  })
-  notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
+
+  if vim.fn.expand('%:p') ~= '' then
+    local builtin = require('telescope.builtin').find_files
+    local actual_path =  vim.fn.getcwd()
+    local actions = require('telescope.actions')
+    vim.cmd("cd $HOME")
+    builtin({
+      attach_mappings = function(prompt_bufnr)
+          actions.select_default:replace(function()
+              actions.close(prompt_bufnr)
+              vim.cmd("cd " .. actual_path)
+          end)
+          return true
+      end  })
+    notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
+  else
+    notify("Telescope_home does not work well from an empty buffer, it will be fixed soon.", 'error',
+      { title = 'Gittory Home', render = "compact" })
+  end
+
 end
 
 return M
+

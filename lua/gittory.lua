@@ -74,7 +74,7 @@ function M.telescope_home()
     local actions_set = require('telescope.actions.set')
     vim.cmd("cd $HOME")
     builtin({
-      attach_mappings = function(prompt_(bufnr))
+      attach_mappings = function(prompt_bufnr)
           actions.select_default:replace(function()
               actions_set.edit(prompt_bufnr, 'edit')
               actions.close(prompt_bufnr)

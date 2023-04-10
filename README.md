@@ -1,5 +1,8 @@
 # Gittory
 
+## Project status
+This project is in an early stage of development. Although it is already fully functional, it may not work as desired since it has only been tested by me and with my Neovim configuration and workflow. I have not been able to test it on Unix operating systems, only on Windows, although the code is designed to work on all systems. Any feedback on the plugin’s performance is appreciated.
+
 ## Introduction
 Gittory is a Neovim plugin that provides functions for working with Git repositories. It allows you to use Telescope to search the entire working directory of the Git repository, regardless of your relative position within the repository.
 
@@ -36,20 +39,38 @@ Before searching for the location of the `.git` directory, Gittory first checks 
 
 ## Features
 - `search_git_root(builtin, args)`: Searches the entire working directory of the Git repository with Telescope's builtin functions.
+- `telescope_home()`: Use `find_files` to search for files from your system’s HOME directory with Telescope.
 
 
 ## Dependencies
 Gittory depends on the following plugins:
-- notify.nvim
 - telescope.nvim
+- notify.nvim
 
 
 ## Installation
-- This plugin does'nt have default keymaps.
+- This plugin doesn't have default keymaps.
 - You can install Gittory using your preferred package manager. Here's an example using `lazy.nvim`:
 
 ```lua
 return{
+
+  {"Wladimir3984/gittory",
+    dependencies = {
+        {"nvim-telescope/telescope.nvim"},
+        {"rcarriga/nvim-notify"},
+    },
+  }
+
+}
+```
+
+## Examples of Keymaps with lazy.nvim
+These are some keymaps that I think are logical to use with Gittory. While it is possible that almost all of Telescope’s built-in functions can be used with Gittory, not all of them make sense to use, as it could result in undesired behavior.
+
+```lua
+return{
+
   {"Wladimir3984/gittory",
     dependencies = {
         {"nvim-telescope/telescope.nvim"},
@@ -64,18 +85,11 @@ return{
       { "<CR>", function() require('gittory').search_git_root(require('telescope.builtin').grep_string,{use_regex = true}) end,
       mode = "x", desc = '[telescope gittory] string grep visual mode with regex' },
     },
-  }
+  }    
+    
 }
 ```
 
-## Usage
-The plugin is very simple, in this lines of code you'll understand the usage:
-
-![image](https://user-images.githubusercontent.com/83993271/229987331-9e0e1118-7263-4c9d-9c31-d0a7b3273cd8.png)
-
-- To use Gittory’s `search_git_root()` function, you can call it like this: `require('gittory').search_git_root()`. 
-- You can also pass in arguments to specify the Telescope builtin function and its arguments. 
-  - For example: `require('gittory').search_git_root(require('telescope.builtin').grep_string, {use_regex = true})`.
 
 
 ## Contributing

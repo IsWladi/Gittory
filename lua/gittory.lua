@@ -66,16 +66,15 @@ end
 -- No git functions
 
 function M.telescope_home()
-  if vim.fn.expand('%:p') ~= '' then
-    local builtin = require('telescope.builtin').find_files
-    actual_path = vim.fn.expand('%:h')
-    vim.cmd("cd $HOME")
-    builtin()
-    vim.cmd("cd " .. actual_path)
-    notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
-  else
-    notify("For cause of a bug, telescope_home doesn't activate in a empty buffer", 'error', { title = 'Gittory Home', render = "compact" })
+  local builtin = require('telescope.builtin').find_files
+  local actual_path =  vim.fn.getcwd()
+  vim.cmd("cd $HOME")
+  builtin({
+  default_selection_index = function()
+      vim.cmd("cd " .. actual_path)
   end
+  })
+  notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
 end
 
 return M

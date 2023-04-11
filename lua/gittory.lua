@@ -10,7 +10,7 @@ function M.isGitRepository()
   if not isWindows then
     isGit = os.execute('git status > /dev/null 2>&1') -- 0 if it is a Git repository, 1 if it is not, the return message is saved in /dev/null (it is deleted)
   else
-    isGit = os.execute('git status > NUL 2>&1') -- 0 if it is a Git repository, 1 if it is not, the return message is saved in NUL (it is deleted)
+    isGit = os.execute('git status > NUL 2>&1') -- For Unix systems, not tested right now
   end
 
   if type(isGit) == 'number' then -- if it is lua 5.2 or higher the return type is number
@@ -67,7 +67,6 @@ end
 
 function M.telescope_home()
 
-  if vim.fn.expand('%:p') ~= '' then
     local builtin = require('telescope.builtin').find_files
     local actual_path =  vim.fn.getcwd()
     builtin({ cwd = vim.fn.expand('$HOME') })
@@ -75,10 +74,6 @@ function M.telescope_home()
       vim.cmd("cd " .. actual_path)
     end)
     notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
-  else
-    notify("Telescope_home does not work well from an empty buffer, it will be fixed soon.", 'error',
-      { title = 'Gittory Home', render = "compact" })
-  end
 
 end
 

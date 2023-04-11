@@ -39,7 +39,7 @@ Before searching for the location of the `.git` directory, Gittory first checks 
 
 ## Features
 - `search_git_root(builtin, args)`: Searches the entire working directory of the Git repository with Telescope's builtin functions.
-- **Don't use** `telescope_home()`: Use `find_files` to search for files from your system’s HOME directory with Telescope.
+- `telescope_home()`: Use `find_files` to search for files from your system’s HOME directory with Telescope. 
 
 
 ## Dependencies
@@ -78,7 +78,7 @@ return{
     },
     keys = {
       { "<leader>ff", function() 
-                        require('gittory').search_git_root() -- For default use find_files
+                        require('gittory').search_git_root() -- For default: find_files
                       end, 
       desc = '[telescope gittory] find files' },
 
@@ -89,11 +89,15 @@ return{
       desc = '[telescope gittory] live grep' },
 
       { "<CR>", function() 
-                  local grepString = require('telescope.builtin').grep_string
+                  local grepString = require('telescope.builtin').grep_string -- find a selected text in you'r entire Git repository using regex
                   local args = {use_regex = true}
                   require('gittory').search_git_root(grepString, args) 
                 end,
       mode = "x", desc = '[telescope gittory] string grep visual mode with regex' },
+      
+      { "<leader><leader>h", function() require('gittory').telescope_home() end, -- Find from you'r home
+       desc = '[telescope gittory] find from home with telescope' },
+      
     },
   }    
     

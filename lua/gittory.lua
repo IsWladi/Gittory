@@ -1,5 +1,8 @@
-local notify = require('notify')
 local M = {}
+local ok, notify = pcall(require, 'notify')
+if not ok then
+  notify = vim.notify
+end
 
 -- Function to check if the current directory is a Git repository
 function M.isGitRepository()

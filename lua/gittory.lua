@@ -64,7 +64,7 @@ function M.search_git_root(builtin, args)
   end
 end
 
--- No git functions
+-- utilities
 
 function M.telescope_home()
 
@@ -77,6 +77,13 @@ function M.telescope_home()
     notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
 
 end
+
+function M.savecwd_to_clipboard_quit()
+  local actual_path =  vim.fn.expand('%:h')
+  vim.fn.setreg('+', actual_path)
+  vim.cmd("q")
+end
+
 
 return M
 

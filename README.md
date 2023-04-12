@@ -40,6 +40,8 @@ Before searching for the location of the `.git` directory, Gittory first checks 
 ## Features
 - `search_git_root(builtin, args)`: Searches the entire working directory of the Git repository with Telescope's builtin functions.
 - `telescope_home()`: Use `find_files` to search for files from your system’s HOME directory with Telescope. 
+- `savecwd_to_clipboard_quit()`: Saved to clipboard "+" the actual buffer path before quit :q. 
+
 
 
 ## Dependencies

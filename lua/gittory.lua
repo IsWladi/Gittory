@@ -79,7 +79,7 @@ function M.telescope_home()
 end
 
 function M.savecwd_to_clipboard_quit()
-  local actual_path =  vim.fn.getcwd()
+  local actual_path =  vim.fn.expand('%:h')
   vim.fn.setreg('+', actual_path)
   vim.cmd("q")
 end

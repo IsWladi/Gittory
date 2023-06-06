@@ -53,6 +53,7 @@ function M.search_git_root(builtin, args)
     local git_root = M.find_git_root()
     if git_root then
       notify(git_root, 'succes', { title = 'Gittory', render = "compact" })
+      vim.api.nvim_set_current_dir(git_root) -- Change the current directory to the root of the Git repository
       args.cwd = git_root
       builtin(args)
     else
@@ -63,27 +64,6 @@ function M.search_git_root(builtin, args)
     builtin(args)
   end
 end
-
--- utilities
-
-function M.telescope_home()
-
-    local builtin = require('telescope.builtin').find_files
-    local actual_path =  vim.fn.getcwd()
-    builtin({ cwd = vim.fn.expand('$HOME') })
-    vim.schedule(function()
-      vim.cmd("cd " .. actual_path)
-    end)
-    notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
-
-end
-
-function M.savecwd_to_clipboard_quit()
-  local actual_path =  vim.fn.expand('%:h')
-  vim.fn.setreg('+', actual_path)
-  vim.cmd("q")
-end
-
 
 return M
 

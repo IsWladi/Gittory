@@ -26,45 +26,6 @@ function M.isGitRepository()
   end
 end
 
--- Function to find the root directory of the Git repository
-function M.find_git_root()
-  local path = vim.loop.cwd()
-  local home = vim.loop.os_homedir()
-  local i = 0
-  while path ~= home do
-    if vim.fn.isdirectory(path .. '/.git') == 1 then
-      return path
-    end
-    path = vim.fn.fnamemodify(path, ':h')
-    i = i + 1
-  end
-  return false
-end
-
--- Function to search the entire working directory of the Git repository with Telescope
-function M.search_git_root(builtin, args)
-  builtin = builtin or require('telescope.builtin').find_files
-  args = args or {}
-
-  vim.cmd("cd " .. vim.fn.expand('%:h'))
-
-  local is_git = M.isGitRepository()
-  if is_git then
-    local git_root = M.find_git_root()
-    if git_root then
-      notify(git_root, 'succes', { title = 'Gittory', render = "compact" })
-      vim.api.nvim_set_current_dir(git_root) -- Change the current directory to the root of the Git repository
-      args.cwd = git_root
-      builtin(args)
-    else
-      notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
-    end
-  else
-    notify('This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
-    builtin(args)
-  end
-end
-
 -- Function to set the root directory of the Git repository for being used at startup of Neovim
 function M.set_git_root()
   local path = vim.loop.cwd()
@@ -88,13 +49,7 @@ function M.set_git_root()
 end
 
 function M.setup()
-  vim.cmd [[
-    augroup gittory
-      autocmd!
-      autocmd BufEnter * lua require('gittory').set_git_root()
-    augroup END
-  ]]
-
+  M.set_git_root() -- Set the root directory of the Git repository for being used at startup of Neovim
 end
 
 return M

@@ -65,5 +65,27 @@ function M.search_git_root(builtin, args)
   end
 end
 
+-- Function to set the root directory of the Git repository at startup of Neovim
+function M.set_git_root()
+  local path = vim.loop.cwd()
+  local home = vim.loop.os_homedir()
+  local i = 0
+  local is_git = M.isGitRepository()
+  if is_git then
+    while path ~= home do
+      if vim.fn.isdirectory(path .. '/.git') == 1 then
+        vim.api.nvim_set_current_dir(path) -- Change the current directory to the root of the Git repository
+        notify(path, 'success', { title = 'Gittory init', render = "compact" })
+        return
+      end
+      path = vim.fn.fnamemodify(path, ':h')
+      i = i + 1
+    end
+    notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
+  else
+    notify('This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
+  end
+end
+
 return M
 

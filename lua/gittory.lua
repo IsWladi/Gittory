@@ -87,5 +87,9 @@ function M.set_git_root()
   end
 end
 
+function M.setup()
+  M.set_git_root()
+end
+
 return M
 

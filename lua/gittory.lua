@@ -65,7 +65,7 @@ function M.search_git_root(builtin, args)
   end
 end
 
--- Function to set the root directory of the Git repository at startup of Neovim
+-- Function to set the root directory of the Git repository for being used at startup of Neovim
 function M.set_git_root()
   local path = vim.loop.cwd()
   local home = vim.loop.os_homedir()

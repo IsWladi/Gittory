@@ -88,7 +88,13 @@ function M.set_git_root()
 end
 
 function M.setup()
-  M.set_git_root()
+  vim.cmd [[
+    augroup gittory
+      autocmd!
+      autocmd BufEnter * lua require('gittory').set_git_root()
+    augroup END
+  ]]
+
 end
 
 return M

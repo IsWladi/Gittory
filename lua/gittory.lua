@@ -41,8 +41,10 @@ function M.set_git_root()
       if vim.fn.isdirectory(path .. '/.git') == 1 then
         vim.api.nvim_set_current_dir(path) -- Change the current directory to the root of the Git repository
         if M.settings.notify == "yes" then
-          notify(path, 'success', { title = 'Gittory init', render = "compact" })
-        end
+          vim.defer_fn(function()
+            notify(path, 'success', { title = 'Gittory init', render = "compact" })
+          end, 1500) --  (1.5 segundos)
+      end
         return
       end
       path = vim.fn.fnamemodify(path, ':h')

@@ -32,13 +32,13 @@ function M.set_git_root(settings)
   settings.notify = settings.notify or "not"
   settings.backUpPath = settings.backUpPath or "not"
   local path = vim.loop.cwd()
+  M.backUpPath = path -- for use in the nvim_create_user_command for desactivate gittory
   local home = vim.loop.os_homedir()
   local i = 0
   local is_git = M.isGitRepository()
   if is_git then
     while path ~= home do
       if vim.fn.isdirectory(path .. '/.git') == 1 then
-        M.backUpPath = path
         if settings.backUpPath ~= "not" then
           vim.api.nvim_set_current_dir(settings.backUpPath)
           if settings.notify == "yes" then

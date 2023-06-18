@@ -52,10 +52,14 @@ function M.set_git_root()
     end
 
     if M.settings.notify == "yes" then
-    notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
+        vim.defer_fn(function()
+          notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
+        end, 1500) --  (1.5 segundos)
     end
   elseif M.settings.notify == "yes" then
-    notify('This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
+    vim.defer_fn(function()
+      notify('This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
+    end, 1500) --  (1.5 segundos)
   end
 end
 

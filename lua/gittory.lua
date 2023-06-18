@@ -59,10 +59,12 @@ end
 
 function M.setup()
   vim.api.nvim_create_user_command("Gittory",
-    function ()
-      M.set_git_root()
+    function (arg)
+      if (arg) == "set_git_root" then
+        M.set_git_root()
+      end
     end
-    ,{})
+    ,{ nargs = 1 })
   if M.settings.atStartUp == "yes" then
     M.set_git_root() -- Set the root directory of the Git repository for being used at startup of Neovim
   end

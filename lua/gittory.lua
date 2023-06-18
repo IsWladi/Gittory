@@ -60,7 +60,9 @@ function M.set_git_root(set_notify)
 end
 
 function M.setup(options)
-  options = options or {notify="not", atStartUp="not"}
+  options = options or {}
+  options.atStartUp = options.atStartUp or "not"
+  options.notify = options.notify or "not"
   vim.api.nvim_create_user_command("Gittory",
     function ()
       M.set_git_root(options.notify)

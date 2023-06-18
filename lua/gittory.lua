@@ -58,7 +58,7 @@ function M.set_git_root()
 end
 
 function M.setup()
-  vim.api.nvim_create_user_command("set_git_cwd",
+  vim.api.nvim_create_user_command("Gittory",
     function ()
       M.set_git_root()
     end

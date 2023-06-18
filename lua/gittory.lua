@@ -4,10 +4,6 @@ if not ok then
   notify = vim.notify
 end
 
-M.settings = {}
-M.settings.notify = "not"
-M.settings.atStartUp = "not"
-
 -- Function to check if the current directory is a Git repository
 function M.isGitRepository()
   local windows = string.lower(vim.loop.os_uname().sysname)
@@ -31,7 +27,7 @@ function M.isGitRepository()
 end
 
 -- Function to set the root directory of the Git repository for being used at startup of Neovim
-function M.set_git_root()
+function M.set_git_root(set_notify)
   local path = vim.loop.cwd()
   local home = vim.loop.os_homedir()
   local i = 0
@@ -40,7 +36,7 @@ function M.set_git_root()
     while path ~= home do
       if vim.fn.isdirectory(path .. '/.git') == 1 then
         vim.api.nvim_set_current_dir(path) -- Change the current directory to the root of the Git repository
-        if M.settings.notify == "yes" then
+        if set_notify == "yes" then
           vim.defer_fn(function()
             notify(path, 'success', { title = 'Gittory init', render = "compact" })
           end, 1500) --  (1.5 segundos)
@@ -51,27 +47,30 @@ function M.set_git_root()
       i = i + 1
     end
 
-    if M.settings.notify == "yes" then
+    if set_notify == "yes" then
         vim.defer_fn(function()
           notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
         end, 1500) --  (1.5 segundos)
     end
-  elseif M.settings.notify == "yes" then
+  elseif set_notify == "yes" then
     vim.defer_fn(function()
       notify('This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
     end, 1500) --  (1.5 segundos)
   end
 end
 
-function M.setup()
+function M.setup(options)
+  options = options or {notify="not", atStartUp="not"}
   vim.api.nvim_create_user_command("Gittory",
     function ()
-      M.set_git_root()
+      M.set_git_root(options.notify)
     end
     ,{desc="Gittory is for set the cwd of your git proyect"})
+
   if M.settings.atStartUp == "yes" then
-    M.set_git_root() -- Set the root directory of the Git repository for being used at startup of Neovim
+    M.set_git_root(options.notify) -- Set the root directory of the Git repository for being used at startup of Neovim
   end
+
 end
 
 return M

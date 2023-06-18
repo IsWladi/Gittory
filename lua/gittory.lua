@@ -81,15 +81,15 @@ function M.setup(options)
     function (command)
       command = command or "init"
       if command == "desactivate" then
-        M.set_git_root{notify = options.notify, backUpPath = command}
+        M.set_git_root( {notify = options.notify, backUpPath = command} )
       elseif command == "init" then
-      M.set_git_root{notify = options.notify}
+      M.set_git_root( {notify = options.notify} )
       end
     end
     ,{desc="Gittory is for set the cwd of your git proyect"})
 
   if options.atStartUp == "yes" then
-    M.set_git_root{notify = options.notify} -- Set the root directory of the Git repository for being used at startup of Neovim
+    M.set_git_root( {notify = options.notify} ) -- Set the root directory of the Git repository for being used at startup of Neovim
   end
 
 end

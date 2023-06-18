@@ -67,7 +67,7 @@ function M.setup(options)
     end
     ,{desc="Gittory is for set the cwd of your git proyect"})
 
-  if M.settings.atStartUp == "yes" then
+  if options.atStartUp == "yes" then
     M.set_git_root(options.notify) -- Set the root directory of the Git repository for being used at startup of Neovim
   end
 

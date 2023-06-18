@@ -76,13 +76,13 @@ function M.setup(options)
   options = options or {}
   options.atStartUp = options.atStartUp or "not"
   options.notify = options.notify or "not"
-  vim.api.nvim_create_user_command("Gittory_init",
+  vim.api.nvim_create_user_command("GittoryInit",
     function ()
         M.set_git_root( {notify = options.notify} )
     end
     ,{desc="Gittory is for set the cwd of your git proyect"})
 
-  vim.api.nvim_create_user_command("Gittory_desactivate",
+  vim.api.nvim_create_user_command("GittoryDesactivate",
     function ()
         M.set_git_root( {notify = options.notify, backUpPath = M.backUpPath} )
     end

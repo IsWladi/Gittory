@@ -37,13 +37,6 @@ that's a problem for me because I want to see all files on my proyect when I'am 
 Before searching for the location of the `.git` directory, Gittory first checks if the current project is a Git project by running a `git status` command. If the current project is not a Git project, Gittory will still use Telescope but in the current buffer location. If the current project is a Git project, Gittory will search recursively through parent directories until it finds the `.git` folder and then call Telescope from this location. Whenever you call Telescope with Gittory, you'll be able to search your entire Git repository.
 
 
-## Features
-- `search_git_root(builtin, args)`: Searches the entire working directory of the Git repository with Telescope's builtin functions.
-- `telescope_home()`: Use `find_files` to search for files from your system’s HOME directory with Telescope.
-- `savecwd_to_clipboard_quit()`: Saved to clipboard "+" the actual buffer path before quit :q.
-
-
-
 ## Dependencies
 Gittory don´t depends on other plugins, but it´s better with:
 - notify.nvim

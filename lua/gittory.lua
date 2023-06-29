@@ -1,5 +1,9 @@
-local notify = require('notify')
 local M = {}
+local ok, notify = pcall(require, 'notify')
+if not ok then
+  notify = vim.notify
+end
+M.backUpPath = nil
 
 -- Function to check if the current directory is a Git repository
 function M.isGitRepository()
@@ -23,55 +27,70 @@ function M.isGitRepository()
   end
 end
 
--- Function to find the root directory of the Git repository
-function M.find_git_root()
+-- Function to set the root directory of the Git repository for being used at startup of Neovim
+function M.set_git_root(settings)
+  settings.notify = settings.notify or "not"
+  settings.backUpPath = settings.backUpPath or "not"
   local path = vim.loop.cwd()
+  M.backUpPath = path -- for use in the nvim_create_user_command for desactivate gittory
   local home = vim.loop.os_homedir()
   local i = 0
-  while path ~= home do
-    if vim.fn.isdirectory(path .. '/.git') == 1 then
-      return path
-    end
-    path = vim.fn.fnamemodify(path, ':h')
-    i = i + 1
-  end
-  return false
-end
-
--- Function to search the entire working directory of the Git repository with Telescope
-function M.search_git_root(builtin, args)
-  builtin = builtin or require('telescope.builtin').find_files
-  args = args or {}
-
-  vim.cmd("cd " .. vim.fn.expand('%:h'))
-
   local is_git = M.isGitRepository()
   if is_git then
-    local git_root = M.find_git_root()
-    if git_root then
-      notify(git_root, 'succes', { title = 'Gittory', render = "compact" })
-      args.cwd = git_root
-      builtin(args)
-    else
-      notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
+    while path ~= home do
+      if vim.fn.isdirectory(path .. '/.git') == 1 then
+        if settings.backUpPath ~= "not" then
+          vim.api.nvim_set_current_dir(settings.backUpPath)
+          if settings.notify == "yes" then
+            vim.defer_fn(function()
+              notify("original path", 'success', { title = 'Gittory desactivate', render = "compact" })
+            end, 1500) --  (1.5 segundos)
+          end
+        else
+          vim.api.nvim_set_current_dir(path) -- Change the current directory to the root of the Git repository
+          if settings.notify == "yes" then
+            vim.defer_fn(function()
+              notify(path, 'success', { title = 'Gittory init', render = "compact" })
+            end, 1500) --  (1.5 segundos)
+          end
+        end
+        return
+      end
+      path = vim.fn.fnamemodify(path, ':h')
+      i = i + 1
     end
-  else
-    notify('This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
-    builtin(args)
+
+    if settings.notify == "yes" then
+        vim.defer_fn(function()
+          notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
+        end, 1500) --  (1.5 segundos)
+    end
+  elseif settings.notify == "yes" then
+    vim.defer_fn(function()
+      notify('This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
+    end, 1500) --  (1.5 segundos)
   end
 end
 
--- No git functions
+function M.setup(options)
+  options = options or {}
+  options.atStartUp = options.atStartUp or "not"
+  options.notify = options.notify or "not"
+  vim.api.nvim_create_user_command("GittoryInit",
+    function ()
+        M.set_git_root( {notify = options.notify} )
+    end
+    ,{desc="Gittory is for set the cwd of your git proyect"})
 
-function M.telescope_home()
+  vim.api.nvim_create_user_command("GittoryDesactivate",
+    function ()
+        M.set_git_root( {notify = options.notify, backUpPath = M.backUpPath} )
+    end
+    ,{desc="Gittory is for set the cwd of your git proyect"})
 
-    local builtin = require('telescope.builtin').find_files
-    local actual_path =  vim.fn.getcwd()
-    builtin({ cwd = vim.fn.expand('$HOME') })
-    vim.schedule(function()
-      vim.cmd("cd " .. actual_path)
-    end)
-    notify("In you'r home", 'info', { title = 'Gittory Home', render = "compact" })
+  if options.atStartUp == "yes" then
+    M.set_git_root( {notify = options.notify} ) -- Set the root directory of the Git repository for being used at startup of Neovim
+  end
 
 end
 

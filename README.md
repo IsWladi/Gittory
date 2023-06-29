@@ -1,7 +1,7 @@
 # Gittory
 
 ## Project status
-This project is in an early stage of development. Although it is already fully functional, it may not work as desired since it has only been tested by me and with my Neovim configuration and workflow. I have not been able to test it on Unix operating systems, only on Windows, although the code is designed to work on all systems. Any feedback on the plugin’s performance is appreciated.
+This project is in an early stage of development. Although it is already fully functional, it may not work as desired since it has only been tested by me and with my Neovim configuration and workflow. Tested only on Windows and Ubuntu, although the code is designed to work on all systems. Any feedback on the plugin’s performance is appreciated.
 
 ## Introduction
 Gittory is a Neovim plugin that provides functions for working with Git repositories. It allows you to use Telescope to search the entire working directory of the Git repository, regardless of your relative position within the repository.
@@ -34,7 +34,7 @@ js/
 that's a problem for me because I want to see all files on my proyect when I'am using git and don't think where I open nvim in the project. Gittory solves this by allowing you to use Telescope to search the entire working directory of the Git repository, regardless of your relative position within the repository.
 
 ### The solution
-Before searching for the location of the `.git` directory, Gittory first checks if the current project is a Git project by running a `git status` command. If the current project is not a Git project, Gittory will still use Telescope but in the current buffer location. If the current project is a Git project, Gittory will search recursively through parent directories until it finds the `.git` folder and then call Telescope from this location. Whenever you call Telescope with Gittory, you'll be able to search your entire Git repository.
+Before searching for the location of the `.git` directory, Gittory first checks if the current project is a Git project by running a `git status` command. If the current project is not a Git project, Gittory will still use Telescope but in the current buffer location. If the current project is a Git project, Gittory will search recursively through parent directories until it finds the `.git` folder and then set the cwd at this location. Whenever you call Telescope with Gittory, you'll be able to search your entire Git repository.
 
 
 ## Dependencies

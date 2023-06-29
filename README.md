@@ -39,16 +39,14 @@ Before searching for the location of the `.git` directory, Gittory first checks 
 
 ## Features
 - `search_git_root(builtin, args)`: Searches the entire working directory of the Git repository with Telescope's builtin functions.
-- `telescope_home()`: Use `find_files` to search for files from your system’s HOME directory with Telescope. 
-- `savecwd_to_clipboard_quit()`: Saved to clipboard "+" the actual buffer path before quit :q. 
+- `telescope_home()`: Use `find_files` to search for files from your system’s HOME directory with Telescope.
+- `savecwd_to_clipboard_quit()`: Saved to clipboard "+" the actual buffer path before quit :q.
 
 
 
 ## Dependencies
-Gittory depends on the following plugins:
-- telescope.nvim
+Gittory don´t depends on other plugins, but it´s better with:
 - notify.nvim
-
 
 ## Installation
 - This plugin doesn't have default keymaps.
@@ -56,57 +54,29 @@ Gittory depends on the following plugins:
 
 ```lua
 return{
-
   {"Wladimir3984/gittory",
+
+    branch = "main", -- for tested version of the plugin
+
     dependencies = {
-        {"nvim-telescope/telescope.nvim"},
         {"rcarriga/nvim-notify"},
     },
+    init = function()
+      local gittory = require('gittory')
+      gittory.setup{
+          notify = "yes",
+          atStartUp = "yes"
+        }
+    end,
   }
 
 }
 ```
 
 ## Examples of Keymaps with lazy.nvim
-These are some keymaps that I think are logical to use with Gittory. While it is possible that almost all of Telescope’s built-in functions can be used with Gittory, not all of them make sense to use, as it could result in undesired behavior.
-
-```lua
-return{
-
-  {"Wladimir3984/gittory",
-    dependencies = {
-        {"nvim-telescope/telescope.nvim"},
-        {"rcarriga/nvim-notify"},
-    },
-    keys = {
-      { "<leader>ff", function() 
-                        require('gittory').search_git_root() -- For default: find_files
-                      end, 
-      desc = '[telescope gittory] find files' },
-
-      { "<leader>fg", function() 
-                        local liveGrep = require('telescope.builtin').live_grep
-                        require('gittory').search_git_root(liveGrep) 
-                      end,
-      desc = '[telescope gittory] live grep' },
-
-      { "<CR>", function() 
-                  local grepString = require('telescope.builtin').grep_string -- find a selected text in you'r entire Git repository using regex
-                  local args = {use_regex = true}
-                  require('gittory').search_git_root(grepString, args) 
-                end,
-      mode = "x", desc = '[telescope gittory] string grep visual mode with regex' },
-      
-      { "<leader><leader>h", function() require('gittory').telescope_home() end, -- Find from you'r home
-       desc = '[telescope gittory] find from home with telescope' },
-      
-    },
-  }    
-    
-}
-```
-
-
+there are two commands, :GittoryInit and :GittoryDesactivate
+:GittoryInit = if `atStartUp = "not"` then init Gittory and set the cwd at the git root of the project
+:GittoryDesactivate = desactivate Gittory and set the initial path before set de git root workdirectory
 
 ## Contributing
 If you would like to contribute to the development of Gittory, you can do so by submitting a pull request or opening an issue on the project’s GitHub repository.

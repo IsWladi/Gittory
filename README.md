@@ -67,8 +67,8 @@ return{
 ```
 
 ## Examples of Keymaps with lazy.nvim
-there are two commands, :GittoryInit and :GittoryDesactivate
-:GittoryInit = if `atStartUp = "not"` then init Gittory and set the cwd at the git root of the project
+there are two commands, :GittoryInit and :GittoryDesactivate.  
+:GittoryInit = if `atStartUp = "not"` then init Gittory and set the cwd at the git root of the project.  
 :GittoryDesactivate = desactivate Gittory and set the initial path before set de git root workdirectory
 
 ## Contributing

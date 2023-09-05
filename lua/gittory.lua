@@ -45,7 +45,7 @@ function M.set_git_root(settings)
           if settings.notify == "yes" then
             shortPath = settings.backUpPath:match("[^/\\]+$")
             vim.defer_fn(function()
-              notify('Actual folder: /'..shortPath..'/', 'success', { title = 'Gittory desactivate', render = "compact" })
+              notify('Actual folder: /'..shortPath..'/', 'success', { title = 'Gittory', render = "compact" })
             end, 1500) --  (1.5 seconds)
           end
         else
@@ -53,7 +53,7 @@ function M.set_git_root(settings)
           if settings.notify == "yes" then
             shortPath = path:match("[^/\\]+$")
             vim.defer_fn(function()
-              notify('Folder´s project: /'..shortPath..'/', 'success', { title = 'Gittory init', render = "compact" })
+              notify('Folder´s project: /'..shortPath..'/', 'success', { title = 'Gittory', render = "compact" })
             end, 1500) --  (1.5 seconds)
           end
         end
@@ -66,12 +66,12 @@ function M.set_git_root(settings)
     if settings.notify == "yes" then
         vim.defer_fn(function()
           notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
-        end, 1500) --  (1.5 segundos)
+        end, 1500) --  (1.5 seconds)
     end
   elseif settings.notify == "yes" then
     vim.defer_fn(function()
       notify('This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
-    end, 1500) --  (1.5 segundos)
+    end, 1500) --  (1.5 seconds)
   end
 end
 

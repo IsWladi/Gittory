@@ -49,7 +49,7 @@ function M.set_git_root(settings)
         else
           vim.api.nvim_set_current_dir(path) -- Change the current directory to the root of the Git repository
           if settings.notify == "yes" then
-            local shortPath = path:match("[^/]+$")
+            local shortPath = path:match("[^/\\]+$")
             vim.defer_fn(function()
               notify(shortPath, 'success', { title = 'Gittory init', render = "compact" })
             end, 1500) --  (1.5 segundos)

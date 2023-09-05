@@ -43,7 +43,7 @@ function M.set_git_root(settings)
         if settings.backUpPath ~= "not" then
           vim.api.nvim_set_current_dir(settings.backUpPath)
           if settings.notify == "yes" then
-            shortPath = path:match("[^/\\]+$")
+            shortPath = settings.backUpPath:match("[^/\\]+$")
             vim.defer_fn(function()
               notify('Actual folder: /'..shortPath..'/', 'success', { title = 'Gittory desactivate', render = "compact" })
             end, 1500) --  (1.5 seconds)

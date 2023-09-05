@@ -51,7 +51,7 @@ function M.set_git_root(settings)
           if settings.notify == "yes" then
             local shortPath = path:match("[^/\\]+$")
             vim.defer_fn(function()
-              notify(shortPath, 'success', { title = 'Gittory init', render = "compact" })
+              notify('Folder´s project: /'..shortPath..'/', 'success', { title = 'Gittory init', render = "compact" })
             end, 1500) --  (1.5 segundos)
           end
         end

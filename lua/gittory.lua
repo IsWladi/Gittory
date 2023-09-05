@@ -39,20 +39,22 @@ function M.set_git_root(settings)
   if is_git then
     while path ~= home do
       if vim.fn.isdirectory(path .. '/.git') == 1 then
+        local shortPath = nil
         if settings.backUpPath ~= "not" then
           vim.api.nvim_set_current_dir(settings.backUpPath)
           if settings.notify == "yes" then
+            shortPath = path:match("[^/\\]+$")
             vim.defer_fn(function()
-              notify("original path", 'success', { title = 'Gittory desactivate', render = "compact" })
-            end, 1500) --  (1.5 segundos)
+              notify('Actual folder: /'..shortPath..'/', 'success', { title = 'Gittory desactivate', render = "compact" })
+            end, 1500) --  (1.5 seconds)
           end
         else
           vim.api.nvim_set_current_dir(path) -- Change the current directory to the root of the Git repository
           if settings.notify == "yes" then
-            local shortPath = path:match("[^/\\]+$")
+            shortPath = path:match("[^/\\]+$")
             vim.defer_fn(function()
               notify('Folder´s project: /'..shortPath..'/', 'success', { title = 'Gittory init', render = "compact" })
-            end, 1500) --  (1.5 segundos)
+            end, 1500) --  (1.5 seconds)
           end
         end
         return

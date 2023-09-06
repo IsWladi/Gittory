@@ -35,16 +35,16 @@ js/
 that's a problem for me because I want to see all files on my proyect when I'am using git and don't think where I open nvim in the project. Gittory solves this by allowing you to use Telescope to search the entire working directory of the Git repository, regardless of your relative position within the repository.
 
 ### The solution
-Before searching for the location of the `.git` directory, Gittory first checks if the current project is a Git project by running a `git status` command. If the current project is not a Git project, Gittory will still use Telescope but in the current buffer location. If the current project is a Git project, Gittory will search recursively through parent directories until it finds the `.git` folder and then set the cwd at this location. Whenever you call Telescope with Gittory, you'll be able to search your entire Git repository.
+Before searching for the location of the `.git/` directory, Gittory first checks if the current project is a Git project by running the git status command. If the current project is not a Git project, Gittory won't take any action, and you can continue with your work without any worries. If the current project is a Git project, Gittory will search in parent directories until it finds the `.git/` folder and then set the current working directory (cwd) to that location.
 
 
 ## Dependencies
 Gittory don´t depends on other plugins, but it´s better with:
-- notify.nvim
+- [notify.nvim](https://github.com/rcarriga/nvim-notify)
 
 ## This plugin is useful when used with (it depends on your workflow)
-- [Telescope](https://github.com/nvim-telescope/telescope.nvim)
-- [Harpoon](https://github.com/ThePrimeagen/harpoon)
+- [Telescope](https://github.com/nvim-telescope/telescope.nvim) Gittory will expand the search scope of Telescope.
+- [Harpoon](https://github.com/ThePrimeagen/harpoon) Gittory will allow you to better organize your Harpoon marks, being able to have the main ones at the root of your project, and when you deactivate Gittory, you can have marks in other cwd of your project.
 
 ## Installation
 - This plugin doesn't have default keymaps.
@@ -63,6 +63,7 @@ return{
     init = function()
       local gittory = require('gittory')
       gittory.setup{
+      -- I recommend using the atStartUp and notify options as yes
           notify = "yes",
           atStartUp = "yes"
         }

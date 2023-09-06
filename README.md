@@ -2,12 +2,13 @@
 
 ## Project status
 This project is in an early stage of development. Although it is already fully functional, it may not work as desired since it has only been tested by me and with my Neovim configuration and workflow. Tested only on Windows and Ubuntu, although the code is designed to work on all systems. Any feedback on the plugin’s performance is appreciated.
+Look at the Trello board of this project to see the development flow: https://trello.com/b/5Sgb20pL/gittory-development
 
 ## Introduction
-Gittory is a Neovim plugin that provides functions for working with Git repositories. It allows you to use Telescope to search the entire working directory of the Git repository, regardless of your relative position within the repository.
+Gittory is a Neovim plugin that makes using the Telescope plugin easier. In simple terms, it changes the working directory to the root folder of your current project by finding the '.git' folder. It also works well with the Harpoon plugin. Whenever you open Neovim within a project, any marks you've made with Harpoon will be available, no matter which subfolder you opened Neovim in. Additionally, if you deactivate the plugin using the ':GittoryDesactivate' command, Neovim's working directory will return to where you originally opened it.
 
-### The problem
-Imagine you have a project structured like this:
+### An example
+Imagine you have a project structured like this, and you're in the `js/` folder:
 ```
 myProject
 ├── .git/
@@ -15,21 +16,21 @@ myProject
 │   ├── image1.png
 │   ├── image2.jpg
 │   └── image3.gif
-├── js/
+├── js/ <------------------------------ You opened Neovim from the terminal here
 │   ├── chargeSomething.js
 │   ├── other.js
-│   └── andother.js
+│   └── andOther.js
 ├── css/
 │   ├── style.css
 │   └── responsive.css
 └── index.html
 ```
-Suppose you navigate to the `js/` directory within the `myProject/` directory using the terminal command `cd ./myProject/js/` and open Neovim in this location. When you use Telescope, you’ll notice that you can only see the contents of the `js/` directory:
+When you open Telescope without using Gittory, you will only see the scope of the folder you opened:
 ```
 js/
 ├── chargeSomething.js
 ├── other.js
-└── andother.js
+└── andOther.js
 ```
 that's a problem for me because I want to see all files on my proyect when I'am using git and don't think where I open nvim in the project. Gittory solves this by allowing you to use Telescope to search the entire working directory of the Git repository, regardless of your relative position within the repository.
 
@@ -41,8 +42,13 @@ Before searching for the location of the `.git` directory, Gittory first checks 
 Gittory don´t depends on other plugins, but it´s better with:
 - notify.nvim
 
+## This plugin is useful when used with (it depends on your workflow)
+- [Telescope](https://github.com/nvim-telescope/telescope.nvim)
+- [Harpoon](https://github.com/ThePrimeagen/harpoon)
+
 ## Installation
 - This plugin doesn't have default keymaps.
+- This plugin needs to be initialized with the 'setup' function.
 - You can install Gittory using your preferred package manager. Here's an example using `lazy.nvim`:
 
 ```lua
@@ -66,10 +72,10 @@ return{
 }
 ```
 
-## Examples of Keymaps with lazy.nvim
-there are two commands, :GittoryInit and :GittoryDesactivate.  
-:GittoryInit = if `atStartUp = "not"` then init Gittory and set the cwd at the git root of the project.  
-:GittoryDesactivate = desactivate Gittory and set the initial path before set de git root workdirectory
+## Plugin commands
+there are two commands, :GittoryInit and :GittoryDesactivate.
+`:GittoryInit` initializes Gittory and sets the current working directory (cwd) to the root of the git project (this command is not necessary if you have the option atStartUp = "yes").
+`:GittoryDesactivate` Deactivates Gittory and sets the initial path where Neovim was opened.
 
 ## Contributing
 If you would like to contribute to the development of Gittory, you can do so by submitting a pull request or opening an issue on the project’s GitHub repository.

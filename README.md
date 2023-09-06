@@ -74,8 +74,8 @@ return{
 ```
 
 ## Plugin commands
-there are two commands, :GittoryInit and :GittoryDesactivate.
-`:GittoryInit` initializes Gittory and sets the current working directory (cwd) to the root of the git project (this command is not necessary if you have the option atStartUp = "yes").
+`:GittoryInit` initializes Gittory and sets the current working directory (cwd) to the root of the git project (this command is not necessary if you have the option `atStartUp = "yes"`).    
+
 `:GittoryDesactivate` Deactivates Gittory and sets the initial path where Neovim was opened.
 
 ## Contributing

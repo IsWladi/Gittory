@@ -53,7 +53,7 @@ Gittory don´t depends on other plugins, but it´s better with:
 
 ```lua
 return{
-  {"Wladimir3984/gittory",
+  {"IsWladi/Gittory",
 
     branch = "main", -- for tested version of the plugin
 

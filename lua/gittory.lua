@@ -1,8 +1,6 @@
 local M = {}
 local ok, notify = pcall(require, 'notify')
--- if not ok then
---   notify = false
--- end
+notify = ok and notify or false
 M.backUpPath = nil
 
 -- Function to check if the current directory is a Git repository

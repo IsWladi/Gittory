@@ -1,7 +1,7 @@
 local M = {}
 local ok, notify = pcall(require, 'notify')
 if not ok then
-  notify = vim.notify
+  notify = false
 end
 M.backUpPath = nil
 
@@ -27,6 +27,15 @@ function M.isGitRepository()
   end
 end
 
+-- Function to print messages with or without the rcarriga/nvim-notify plugin.
+function M.printMessage(isNotifyInstalled, message, type, options)
+  if isNotifyInstalled then
+    notify(message, type, options)
+  else
+    print(message)
+  end
+end
+
 -- Function to set the root directory of the Git repository for being used at startup of Neovim
 function M.set_git_root(settings)
   settings.notify = settings.notify or "not"
@@ -45,7 +54,7 @@ function M.set_git_root(settings)
           if settings.notify == "yes" then
             shortPath = settings.backUpPath:match("[^/\\]+$")
             vim.defer_fn(function()
-              notify('Actual folder: /'..shortPath..'/', 'success', { title = 'Gittory', render = "compact" })
+              M.printMessage(notify, 'Actual folder: /'..shortPath..'/' , 'success', { title = 'Gittory', render = "compact" })
             end, 1500) --  (1.5 seconds)
           end
         else
@@ -53,7 +62,7 @@ function M.set_git_root(settings)
           if settings.notify == "yes" then
             shortPath = path:match("[^/\\]+$")
             vim.defer_fn(function()
-              notify('Folder´s project: /'..shortPath..'/', 'success', { title = 'Gittory', render = "compact" })
+              M.printMessage(notify, 'Folder´s project: /'..shortPath..'/' , 'success', { title = 'Gittory', render = "compact" })
             end, 1500) --  (1.5 seconds)
           end
         end
@@ -65,12 +74,12 @@ function M.set_git_root(settings)
 
     if settings.notify == "yes" then
         vim.defer_fn(function()
-          notify('No .git found. The search is maximum up to /home/', 'error', { title = 'Gittory' })
+          M.printMessage(notify, 'No /.git/ found. The search is maximum up to /home/', 'error', { title = 'Gittory', render = "compact" })
         end, 1500) --  (1.5 seconds)
     end
   elseif settings.notify == "yes" then
     vim.defer_fn(function()
-      notify('This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
+      M.printMessage(notify, 'This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
     end, 1500) --  (1.5 seconds)
   end
 end

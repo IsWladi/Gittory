@@ -1,8 +1,8 @@
 local M = {}
 local ok, notify = pcall(require, 'notify')
-if not ok then
-  notify = false
-end
+-- if not ok then
+--   notify = false
+-- end
 M.backUpPath = nil
 
 -- Function to check if the current directory is a Git repository
@@ -54,7 +54,7 @@ function M.set_git_root(settings)
           if settings.notify == "yes" then
             shortPath = settings.backUpPath:match("[^/\\]+$")
             vim.defer_fn(function()
-              M.printMessage(notify, 'Actual folder: /'..shortPath..'/' , 'success', { title = 'Gittory', render = "compact" })
+              M.printMessage(ok, 'Actual folder: /'..shortPath..'/' , 'success', { title = 'Gittory', render = "compact" })
             end, 1500) --  (1.5 seconds)
           end
         else
@@ -62,7 +62,7 @@ function M.set_git_root(settings)
           if settings.notify == "yes" then
             shortPath = path:match("[^/\\]+$")
             vim.defer_fn(function()
-              M.printMessage(notify, 'Folder´s project: /'..shortPath..'/' , 'success', { title = 'Gittory', render = "compact" })
+              M.printMessage(ok, 'Folder´s project: /'..shortPath..'/' , 'success', { title = 'Gittory', render = "compact" })
             end, 1500) --  (1.5 seconds)
           end
         end
@@ -74,12 +74,12 @@ function M.set_git_root(settings)
 
     if settings.notify == "yes" then
         vim.defer_fn(function()
-          M.printMessage(notify, 'No /.git/ found. The search is maximum up to /home/', 'error', { title = 'Gittory', render = "compact" })
+          M.printMessage(ok, 'No /.git/ found. The search is maximum up to /home/', 'error', { title = 'Gittory', render = "compact" })
         end, 1500) --  (1.5 seconds)
     end
   elseif settings.notify == "yes" then
     vim.defer_fn(function()
-      M.printMessage(notify, 'This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
+      M.printMessage(ok, 'This is not a Git repository. The actual path is being used.', 'info', { title = 'Gittory', render = "compact" })
     end, 1500) --  (1.5 seconds)
   end
 end

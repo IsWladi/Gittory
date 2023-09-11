@@ -58,23 +58,19 @@ return{
     branch = "main", -- for tested version of the plugin
 
     dependencies = {
-        {"rcarriga/nvim-notify"},
+        {"rcarriga/nvim-notify"}, -- optional
     },
-    init = function()
-      local gittory = require('gittory')
-      gittory.setup{
-      -- I recommend using the atStartUp and notify options as yes
-          notify = "yes",
-          atStartUp = "yes"
-        }
-    end,
+    config = true,
+    opts = {
+          notify = "yes", -- by default "yes"
+          atStartUp = "yes" -- by default "yes"
+    },
   }
-
 }
 ```
 
 ## Plugin commands
-`:GittoryInit` initializes Gittory and sets the current working directory (cwd) to the root of the git project (this command is not necessary if you have the option `atStartUp = "yes"`).    
+`:GittoryInit` initializes Gittory and sets the current working directory (cwd) to the root of the git project (this command is not necessary if you have the option `atStartUp = "yes"`).
 
 `:GittoryDesactivate` Deactivates Gittory and sets the initial path where Neovim was opened.
 

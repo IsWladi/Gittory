@@ -1,0 +1,27 @@
+================================================================================
+INTRODUCTION                                                    *Gittory*
+
+Gittory is a plugin that changes your working directory to the root of your
+project if you use Git. It is useful to use with Telescope and Harpoon,
+depending on your needs and workflow.
+
+Getting started with Gittory:
+
+================================================================================
+FUNCTIONS                                                       *Gittory*
+
+1. isGitRepository():
+    Utility: Check if the current directory is a Git repository.
+	Return: boolean.
+
+2. printMessage(isNotifyInstalled, message, type, options):
+	Utility: Print a message to the user with rcarriga/nvim-notify or print().
+	Return: void.
+
+3. set_git_root(settings):
+	Utility: Set the current working directory to the root folder based on the /.git/ folder.
+	Return: void.
+
+4. setup(options):
+	Utility: Setup the plugin based on the options passed.
+	Return: void.

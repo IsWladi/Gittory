@@ -8,7 +8,7 @@ depending on your needs and workflow.
 Getting started with Gittory:
 
 ================================================================================
-FUNCTIONS                                                       *gittory functions*
+FUNCTIONS                                                       *gittory_inner_functions*
 
 1. isGitRepository():
     Utility: Check if the current directory is a Git repository.

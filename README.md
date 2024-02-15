@@ -1,4 +1,7 @@
 # Gittory
+<a href="https://dotfyle.com/plugins/IsWladi/Gittory">
+  <img src="https://dotfyle.com/plugins/IsWladi/Gittory/shield" />
+</a>
 
 ## Project status
 This project is in stage of development. Although it is already fully functional. Any feedback on the plugin’s performance is appreciated.

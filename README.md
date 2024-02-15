@@ -63,6 +63,7 @@ return{
   }
 }
 ```
+- For more documentation, see the neovim help `:help gittory-docs`
 
 ## Plugin commands
 `:GittoryInit` initializes Gittory and sets the current working directory (cwd) to the root of the git project (this command is not necessary if you have the option `atStartUp = "yes"`).

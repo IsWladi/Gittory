@@ -13,16 +13,19 @@ function M.printMessage(message, type, options)
   end
 end
 
--- Function to check if the current directory is a Git repository
-function M.isGitRepository()
-    vim.fn.system("git rev-parse --is-inside-work-tree")
-    return vim.v.shell_error == 0 -- return true if the current directory is a Git repository
-end
-
--- Function to get the root directory of the Git repository
-function M.get_git_root()
-  local dot_git_path = vim.fn.finddir(".git", ".;")
-  return vim.fn.fnamemodify(dot_git_path, ":h")
+-- Function to print various purposes messages
+function M.printResponseMessage(response, options, type)
+  if options == "show path" then
+    local shortPath = git_root_path:match("[^/\\]+$") -- git_root_path is a global variable from the git_setup.lua file
+    if shortPath == "." then -- for fix the bug when the root of the git repository is the same as the cwd
+      shortPath = vim.loop.cwd():match("[^/\\]+$") -- get the name of the folder´s project and avoid "/./" in the message
+    end
+    response = response .. ': /'..shortPath..'/'
+  end
+  -- print the message
+  vim.defer_fn(function()
+    M.printMessage(response, type, { title = 'Gittory', render = "compact" })
+  end, 1000) --  (1 seconds)
 end
 
 return M

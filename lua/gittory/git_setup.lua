@@ -21,12 +21,6 @@ function M.set_git_root(settings)
   settings.backUpPath = settings.backUpPath or "not"
   settings.isInitialized = settings.isInitialized or false
 
-  --[[ -- this part is for protect the variable M.backUpPath to be overwritten and don´t lose the backup path
-  if settings.isInitialized ~= true then
-    local path = vim.loop.cwd()
-    M.backUpPath = path -- for use in the nvim_create_user_command for desactivate gittory
-    settings.isInitialized = true
-  end ]]
   local is_git = M.isGitRepository()
 
   if is_git then

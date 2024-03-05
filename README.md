@@ -37,9 +37,9 @@ js/
 that's a problem for me because I want to see all files on my proyect when I'am using git and don't think where I open nvim in the project. Gittory solves this by allowing you to use Telescope to search the entire working directory of the Git repository, regardless of your relative position within the repository.
 
 ## Dependencies
-Gittory don´t depends on other plugins, but it´s better with:
-- [notify.nvim](https://github.com/rcarriga/nvim-notify)
-
+Gittory does not depend on other plugins to function. However, for enhanced visual notifications, you might consider complementing it with:
+- [notify.nvim](https://github.com/rcarriga/nvim-notify) for rich, customizable notification popups.
+- [fidget.nvim](https://github.com/j-hui/fidget.nvim) while mainly a tool for LSP status notifications, can be repurposed to serve as a minimalist notifier for Gittory events, offering a subtle notification experience.
 ## This plugin is useful when used with
 - [Telescope](https://github.com/nvim-telescope/telescope.nvim) Gittory will expand the search scope of Telescope.
 - [Harpoon](https://github.com/ThePrimeagen/harpoon) Gittory will allow you to better organize your Harpoon marks, being able to have the main ones at the root of your project, and when you deactivate Gittory, you can have marks in other cwd of your project.
@@ -57,11 +57,23 @@ return{
 
     dependencies = {
         {"rcarriga/nvim-notify"}, -- optional
+        {"j-hui/fidget.nvim"} -- optional
     },
     config = true,
+
     opts = { -- you can omit this, is the default
-          notify = "yes", -- by default "yes": If you want to receive notifications when Gittory is activated or deactivated
-          atStartUp = "yes" -- by default "yes": If you want to initialize Gittory when Neovim starts
+          atStartUp = true, -- If you want to initialize Gittory when Neovim starts
+
+          notifySettings = {
+            enabled = true, -- This flag enables the notification system, allowing Gittory to send alerts about its operational status changes.
+
+            -- you can change the order of priority for the plugins or remove those you don't use.
+            -- These are the available options. If you prefer a different notification plugin, please let me know by creating an issue.
+            -- If one of the specified notification plugins is not installed, the next one in the list will be used.
+            -- "print" is the native notification plugin for Neovim; it will print messages to the command line.
+            -- The "print" string is included for clarity. If removed, 'print' will still be used if the other specified plugins are not installed.
+            availableNotifyPlugins =  {"notify", "fidget", "print"}
+          }
     },
   }
 }
@@ -69,7 +81,7 @@ return{
 - For more documentation, see the neovim help `:help gittory-docs`
 
 ## Plugin commands
-`:GittoryInit` initializes Gittory and sets the current working directory (cwd) to the root of the git project (this command is not necessary if you have the option `atStartUp = "yes"`).
+`:GittoryInit` initializes Gittory and sets the current working directory (cwd) to the root of the git project (this command is not necessary if you have the option `atStartUp = true`).
 
 `:GittoryDesactivate` Deactivates Gittory and sets the initial path where Neovim was opened.
 

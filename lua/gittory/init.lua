@@ -1,14 +1,40 @@
 local M = {}
 
-gitSetup = require("gittory.git_setup")
 
 -- for save the path where the user opened Neovim
 M.backUpPath = nil
 
+gitSetup = require("gittory.git_setup") -- charge git functions
+
 function M.setup(options)
   options = options or {}
-  options.atStartUp = options.atStartUp or "not"
-  options.notify = options.notify or "not"
+  atStartUp = true
+  if options.atStartUp == false then
+    atStartUp = false
+  end
+  notifySettings = {
+    enabled = true,
+    -- you can change the order of the plugins
+    availableNotifyPlugins = options.notifySettings.availableNotifyPlugins or {"notify", "fidget", "print"}
+  }
+
+  if options.notifySettings.enabled == false then
+    notifySettings.enabled = false
+  end
+
+  -- set notifications function, if not installed, then use the default print function with printMessage function
+  M.notifyPlugin =  {}
+  -- set to M.notifyPlugin the first available plugin with a for loop with pcall
+  for _, notifyPluginName in ipairs(notifySettings.availableNotifyPlugins) do
+    local ok, plugin = pcall(require, notifyPluginName)
+    if ok then
+      M.notifyPlugin = { plugin = plugin,
+                         pluginName = notifyPluginName
+                       }
+      break
+    end
+  end
+
   M.isInitialized = false -- for protect the variable M.backUpPath to be overwritten
 
 
@@ -18,20 +44,20 @@ function M.setup(options)
 
   vim.api.nvim_create_user_command("GittoryInit",
     function ()
-        gitSetup.set_git_root( {notify = options.notify, isInitialized = M.isInitialized} )
+        gitSetup.set_git_root( {notify = notifySettings.enabled, notifyPlugin = M.notifyPlugin,isInitialized = M.isInitialized} )
         M.isInitialized = true
     end
     ,{desc="Gittory is for set the cwd of your git proyect"})
 
   vim.api.nvim_create_user_command("GittoryDesactivate",
     function ()
-        gitSetup.set_git_root( {notify = options.notify, backUpPath = M.backUpPath, isInitialized = M.isInitialized} )
+        gitSetup.set_git_root( {notify = notifySettings.enabled, notifyPlugin = M.notifyPlugin, backUpPath = M.backUpPath, isInitialized = M.isInitialized} )
         M.isInitialized = false
     end
     ,{desc="Gittory is for set the cwd of your git proyect"})
 
-  if options.atStartUp == "yes" then
-    gitSetup.set_git_root( {notify = options.notify, isInitialized = M.isInitialized} ) -- Set the root directory of the Git repository for being used at startup of Neovim
+  if atStartUp == true then
+    gitSetup.set_git_root( {notify = notifySettings.enabled, notifyPlugin = M.notifyPlugin, isInitialized = M.isInitialized} ) -- Set the root directory of the Git repository for being used at startup of Neovim
     M.isInitialized = true
   end
 

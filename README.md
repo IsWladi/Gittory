@@ -1,9 +1,11 @@
-# <strong style="color: red;">GIT</strong> <strong style="color: grey;"> working direc</strong><strong style="color: red;">TORY</strong>
+# Gittory
 <a href="https://dotfyle.com/plugins/IsWladi/Gittory">
   <img src="https://dotfyle.com/plugins/IsWladi/Gittory/shield" />
 </a>
 
-## Gittory Table of Contents
+Effortlessly Root Your Workspace – Wherever You Wander in Your Code!
+
+## Table of Contents
 - [Project status](#project-status)
 - [Introduction](#introduction)
   * [This plugin is useful when used with](#this-plugin-is-useful-when-used-with)

@@ -11,7 +11,7 @@ Effortlessly Root Your Workspace – Wherever You Wander in Your Code!
   * [This plugin is useful when used with](#this-plugin-is-useful-when-used-with)
 - [Installation](#installation)
   * [Optional dependencies](#optional-dependencies)
-  * [Installation with lazy.nvim](#installation-with-lazy.nvim)
+  * [Installation with lazy.nvim](#installation-with-lazynvim)
 - [Plugin commands](#plugin-commands)
 - [Contributing](#contributing)
 

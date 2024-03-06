@@ -15,7 +15,7 @@ function M.setup(options)
   notifySettings = {
     enabled = true,
     -- you can change the order of the plugins
-    availableNotifyPlugins = options.notifySettings.availableNotifyPlugins or {"notify", "fidget", "print"}
+    availableNotifyPlugins = options.notifySettings.availableNotifyPlugins or {"print"}
   }
 
   if options.notifySettings.enabled == false then
@@ -25,14 +25,23 @@ function M.setup(options)
   -- set notifications function, if not installed, then use the default print function with printMessage function
   M.notifyPlugin =  {}
   -- set to M.notifyPlugin the first available plugin with a for loop with pcall
-  for _, notifyPluginName in ipairs(notifySettings.availableNotifyPlugins) do
-    local ok, plugin = pcall(require, notifyPluginName)
-    if ok then
-      M.notifyPlugin = { plugin = plugin,
-                         pluginName = notifyPluginName
-                       }
-      break
+  if notifySettings.availableNotifyPlugins == "" then
+    M.notifyPlugin = {pluginName = "print"}
+  else
+    for _, notifyPluginName in ipairs(notifySettings.availableNotifyPlugins) do
+      if notifyPluginName == "print" then
+        M.notifyPlugin = {pluginName = notifyPluginName}
+        break
+      end
+      local ok, plugin = pcall(require, notifyPluginName)
+      if ok then
+        M.notifyPlugin = { plugin = plugin, pluginName = notifyPluginName}
+        break
+      end
     end
+  end
+  if M.notifyPlugin.pluginName == nil then -- if all the available plugins are not installed, then use the default print function
+    M.notifyPlugin.pluginName = "print"
   end
 
   M.isInitialized = false -- for protect the variable M.backUpPath to be overwritten

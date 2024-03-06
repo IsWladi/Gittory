@@ -13,12 +13,10 @@ function M.printResponseMessage(response, options, type, notifyPlugin)
   vim.defer_fn(function()
     if notifyPlugin.pluginName == "notify" then
       notifyPlugin.plugin.notify(response, type, { title = 'Gittory', render = "compact" })
-
-    elseif notifyPlugin.pluginName == "fidget" then
-      notifyPlugin.plugin.notify(response)
-    else
+    elseif notifyPlugin.pluginName == "print" then
       print(response)
-
+    else -- for use any other notification plugin
+      notifyPlugin.plugin.notify(response)
     end
   end, 1000) --  (1 seconds)
 end

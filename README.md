@@ -1,54 +1,36 @@
-# Gittory
+# <strong style="color: red;">GIT</strong> <strong style="color: grey;"> working direc</strong><strong style="color: red;">TORY</strong>
 <a href="https://dotfyle.com/plugins/IsWladi/Gittory">
   <img src="https://dotfyle.com/plugins/IsWladi/Gittory/shield" />
 </a>
 
+## Gittory Table of Contents
+- [Project status](#project-status)
+- [Introduction](#introduction)
+  * [This plugin is useful when used with](#this-plugin-is-useful-when-used-with)
+- [Installation](#installation)
+  * [Optional dependencies](#optional-dependencies)
+  * [Installation with lazy.nvim](#installation-with-lazy.nvim)
+- [Plugin commands](#plugin-commands)
+- [Contributing](#contributing)
+
 ## Project status
-This project is in stage of development. Although it is already fully functional. Any feedback on the plugin’s performance is appreciated.
+The project has reached stability with all intended functionalities now implemented. It is currently in the maintenance phase. Feedback is appreciated, and any suggestions for new features will be thoughtfully considered. This is an open-source effort, and I invite community input for ongoing improvements.
 
 ## Introduction
-Gittory is a Neovim plugin that makes using the Telescope plugin easier. In simple terms, it changes the working directory to the root folder of your current project by finding the '.git' folder. It also works well with the Harpoon plugin. Whenever you open Neovim within a project, any marks you've made with Harpoon will be available, no matter which subfolder you opened Neovim in. Additionally, if you deactivate the plugin using the ':GittoryDesactivate' command, Neovim's working directory will return to where you originally opened it.
+Gittory is a straightforward and useful NeoVim plugin. When you open NeoVim, it checks if you're in a Git repository and sets your current working directory (cwd) to the root of your project, where the `.git/` directory is located.
 
-### An example
-Imagine you have a project structured like this, and you're in the `js/` folder:
-```
-myProject
-├── .git/
-├── imgs/
-│   ├── image1.png
-│   ├── image2.jpg
-│   └── image3.gif
-├── js/ <------------------------------ You opened Neovim from the terminal here
-│   ├── chargeSomething.js
-│   ├── other.js
-│   └── andOther.js
-├── css/
-│   ├── style.css
-│   └── responsive.css
-└── index.html
-```
-When you open Telescope without using Gittory, you will only see the scope of the folder you opened:
-```
-js/
-├── chargeSomething.js
-├── other.js
-└── andOther.js
-```
-that's a problem for me because I want to see all files on my proyect when I'am using git and don't think where I open nvim in the project. Gittory solves this by allowing you to use Telescope to search the entire working directory of the Git repository, regardless of your relative position within the repository.
-
-## Dependencies
-Gittory does not depend on other plugins to function. However, for enhanced visual notifications, you might consider complementing it with:
-- [notify.nvim](https://github.com/rcarriga/nvim-notify) for rich, customizable notification popups.
-- [fidget.nvim](https://github.com/j-hui/fidget.nvim) while mainly a tool for LSP status notifications, can be repurposed to serve as a minimalist notifier for Gittory events, offering a subtle notification experience.
-## This plugin is useful when used with
-- [Telescope](https://github.com/nvim-telescope/telescope.nvim) Gittory will expand the search scope of Telescope.
-- [Harpoon](https://github.com/ThePrimeagen/harpoon) Gittory will allow you to better organize your Harpoon marks, being able to have the main ones at the root of your project, and when you deactivate Gittory, you can have marks in other cwd of your project.
+### This plugin is useful when used with
+- [Telescope](https://github.com/nvim-telescope/telescope.nvim) Gittory enhances Telescope by broadening your search scope to include the entire project, regardless of the subfolder from where you launched NeoVim.
+- [Harpoon](https://github.com/ThePrimeagen/harpoon) With Gittory, managing your Harpoon marks becomes more efficient. Your marks are consistently set within the same project context—anchored at the project root. Even when Gittory is deactivated, your marks remain organized, adaptable to other working directories within your project.
 
 ## Installation
 - This plugin doesn't have default keymaps.
 - This plugin needs to be initialized with the 'setup' function.
-- You can install Gittory using your preferred package manager. Here's an example using `lazy.nvim`:
 
+### Optional dependencies
+Gittory does not depend on other plugins to function. However, for enhanced visual notifications, you might consider complementing it with [notify.nvim](https://github.com/rcarriga/nvim-notify) for rich, customizable notification popups or with [fidget.nvim](https://github.com/j-hui/fidget.nvim) while mainly a tool for LSP status notifications, can be repurposed to serve as a minimalist notifier for Gittory events, offering a subtle notification experience.
+
+### Installation with lazy.nvim
 ```lua
 return{
   {"IsWladi/Gittory",
@@ -83,7 +65,7 @@ return{
 ## Plugin commands
 `:GittoryInit` initializes Gittory and sets the current working directory (cwd) to the root of the git project (this command is not necessary if you have the option `atStartUp = true`).
 
-`:GittoryDesactivate` Deactivates Gittory and sets the initial path where Neovim was opened.
+`:GittoryDesactivate` Desactivates Gittory and sets the initial path where Neovim was opened.
 
 ## Contributing
 If you would like to contribute to the development of Gittory, you can do so by submitting a pull request or opening an issue on the project’s GitHub repository.

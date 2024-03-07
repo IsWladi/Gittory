@@ -10,8 +10,12 @@ end
 
 -- Function to get the root directory of the Git repository
 function M.get_git_root()
-  local dot_git_path = vim.fn.finddir(".git", ".;")
-  return vim.fn.fnamemodify(dot_git_path, ":h")
+  local handle = io.popen("git rev-parse --show-toplevel")
+  local result = handle:read("*a")
+  handle:close()
+  -- make result a valid path string
+  result = string.gsub(result, "\n", "")
+  return result
 end
 
 -- Function to set the root directory of the Git repository

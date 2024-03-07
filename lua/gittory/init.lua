@@ -4,15 +4,15 @@ local M = {}
 -- for save the path where the user opened Neovim
 M.backUpPath = nil
 
-gitSetup = require("gittory.git_setup") -- charge git functions
+local gitSetup = require("gittory.git_setup") -- charge git functions
 
 function M.setup(options)
   options = options or {}
-  atStartUp = true
+  local atStartUp = true
   if options.atStartUp == false then
     atStartUp = false
   end
-  notifySettings = {
+  local notifySettings = {
     enabled = true,
     -- you can change the order of the plugins
     availableNotifyPlugins = options.notifySettings.availableNotifyPlugins or {"notify", "print"}

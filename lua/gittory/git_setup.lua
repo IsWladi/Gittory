@@ -1,6 +1,6 @@
 local M = {}
 
-utils = require("gittory.utils")
+local utils = require("gittory.utils")
 
 -- Function to check if the current directory is a Git repository
 function M.isGitRepository()
@@ -36,8 +36,8 @@ function M.set_git_root(settings)
         utils.printResponseMessage('Actual folder: /'..settings.backUpPath:match("[^/\\]+$")..'/', "normal", "succes", settings.notifyPlugin) -- notify the path where the user opened Neovim
       end
     else -- the user want to activate gittory with the command GittoryInit or at startup
-      git_root_path = M.get_git_root()
-      vim.api.nvim_set_current_dir(git_root_path) -- Change the current directory to the root of the Git repository
+      GitRootPath = M.get_git_root()
+      vim.api.nvim_set_current_dir(GitRootPath) -- Change the current directory to the root of the Git repository
 
       if settings.notify == true then  -- notify the root of the actual git repository
         utils.printResponseMessage("Folder´s project", "show path", "success", settings.notifyPlugin) -- notify the root of the actual git repository

@@ -15,7 +15,7 @@ function M.setup(options)
   notifySettings = {
     enabled = true,
     -- you can change the order of the plugins
-    availableNotifyPlugins = options.notifySettings.availableNotifyPlugins or {"print"}
+    availableNotifyPlugins = options.notifySettings.availableNotifyPlugins or {"notify", "print"}
   }
 
   if options.notifySettings.enabled == false then

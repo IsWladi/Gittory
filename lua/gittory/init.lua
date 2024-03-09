@@ -43,8 +43,6 @@ function M.setup(options)
 		M.notifyPlugin.pluginName = "print"
 	end
 
-	M.isInitialized = false -- for protect the variable M.backUpPath to be overwritten
-
 	-- this part is for protect the variable M.backUpPath to be overwritten and don´t lose the backup path
 	local path = vim.loop.cwd()
 	M.backUpPath = path -- for use in the nvim_create_user_command for desactivate gittory
@@ -53,9 +51,7 @@ function M.setup(options)
 		gitSetup.set_git_root({
 			notify = notifySettings.enabled,
 			notifyPlugin = M.notifyPlugin,
-			isInitialized = M.isInitialized,
 		})
-		M.isInitialized = true
 	end, { desc = "Gittory is for set the cwd of your git proyect" })
 
 	vim.api.nvim_create_user_command("GittoryDesactivate", function()
@@ -63,18 +59,14 @@ function M.setup(options)
 			notify = notifySettings.enabled,
 			notifyPlugin = M.notifyPlugin,
 			backUpPath = M.backUpPath,
-			isInitialized = M.isInitialized,
 		})
-		M.isInitialized = false
 	end, { desc = "Gittory is for set the cwd of your git proyect" })
 
 	if atStartUp == true then
 		gitSetup.set_git_root({
 			notify = notifySettings.enabled,
 			notifyPlugin = M.notifyPlugin,
-			isInitialized = M.isInitialized,
 		}) -- Set the root directory of the Git repository for being used at startup of Neovim
-		M.isInitialized = true
 	end
 end
 

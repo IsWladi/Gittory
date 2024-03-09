@@ -14,12 +14,19 @@ function M.setup(options)
 	local notifySettings = {
 		enabled = true,
 		-- you can change the order of the plugins
-		availableNotifyPlugins = options.notifySettings.availableNotifyPlugins or { "notify", "print" },
+		availableNotifyPlugins = { "notify", "print" },
 	}
 
-	if options.notifySettings.enabled == false then
-		notifySettings.enabled = false
-	end
+  if options.notifySettings ~= nil then
+    if options.notifySettings.availableNotifyPlugins ~= nil then
+      notifySettings.availableNotifyPlugins = options.notifySettings.availableNotifyPlugins
+    end
+
+    if options.notifySettings.enabled == false then
+      notifySettings.enabled = false
+    end
+  end
+
 
 	-- set notifications function, if not installed, then use the default print function with printMessage function
 	M.notifyPlugin = {}

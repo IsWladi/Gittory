@@ -51,4 +51,12 @@ describe("init.lua file -> ", function()
     local afterGittorySetup = vim.fn.getcwd()
     assert.equals(afterGittorySetup, subDirPath)
   end)
+
+
+  it("Validates if the default configuration works.", function()
+    vim.api.nvim_set_current_dir("../Gittory/") -- change the cwd to a subdirectory of the repository
+    local ok, ret = pcall(GitInit.setup, {}) -- setup with no options
+    assert.equals(true, ok) -- call to setup should not raise an error
+    assert.equals(rootRepoDir, vim.fn.getcwd()) -- the cwd should change to the root of the repository
+  end)
 end)

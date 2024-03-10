@@ -6,27 +6,10 @@ M.backUpPath = nil
 local gitSetup = require("gittory.git_setup") -- charge git functions
 
 function M.setup(options)
-	options = options or {}
-	local atStartUp = true
-	if options.atStartUp == false then
-		atStartUp = false
-	end
-	local notifySettings = {
-		enabled = true,
-		-- you can change the order of the plugins
-		availableNotifyPlugins = { "notify", "print" },
-	}
+  local mergedUserSettings = require("gittory.defaults").mergeUserConfig(options)
 
-  if options.notifySettings ~= nil then
-    if options.notifySettings.availableNotifyPlugins ~= nil then
-      notifySettings.availableNotifyPlugins = options.notifySettings.availableNotifyPlugins
-    end
-
-    if options.notifySettings.enabled == false then
-      notifySettings.enabled = false
-    end
-  end
-
+	local atStartUp = mergedUserSettings.atStartUp
+	local notifySettings = mergedUserSettings.notifySettings
 
 	-- set notifications function, if not installed, then use the default print function with printMessage function
 	M.notifyPlugin = {}

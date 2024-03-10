@@ -1,7 +1,7 @@
 -- ENSURE THAT YOU OPPENED NEOVIM AT THE ROOT OF THE GITTORY REPOSITORY ~/path/to/Gittory/
 -- SO THAT THE TESTS CAN BE EXECUTED CORRECTLY
 
-describe("init.lua file -> ", function()
+describe("Plugin setup -> ", function()
 
   GitInit = require("gittory.init")
 
@@ -18,7 +18,7 @@ describe("init.lua file -> ", function()
     vim.api.nvim_set_current_dir(rootRepoDir)
   end)
 
-  it("Validates :GittoryDesactivate and :GittoryInit.", function()
+  it("Ensuring :GittoryDeactivate and :GittoryInit Commands Function Properly.", function()
     vim.api.nvim_set_current_dir("../Gittory/") -- change the cwd to a subdirectory of the repository
     local subDirPath = vim.fn.getcwd()
     GitInit.setup({
@@ -38,7 +38,7 @@ describe("init.lua file -> ", function()
   end)
 
 
-  it("Validates atStartUp flag.", function()
+  it("Checking the atStartUp Flag's Effectiveness.", function()
     vim.api.nvim_set_current_dir("../Gittory/") -- change the cwd to a subdirectory of the repository
     local subDirPath = vim.fn.getcwd()
     GitInit.setup({
@@ -53,7 +53,7 @@ describe("init.lua file -> ", function()
   end)
 
 
-  it("Validates if the default configuration works.", function()
+  it("Confirming Default Configuration Applies Successfully.", function()
     vim.api.nvim_set_current_dir("../Gittory/") -- change the cwd to a subdirectory of the repository
     local ok, ret = pcall(GitInit.setup, {}) -- setup with no options
     assert.equals(true, ok) -- call to setup should not raise an error

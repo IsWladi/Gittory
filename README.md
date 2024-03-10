@@ -19,7 +19,7 @@ Effortlessly Root Your Workspace – Wherever You Wander in Your Code!
 
 ## Project status
 
-The project has reached stability with all intended functionalities now implemented. It is currently in the maintenance phase. Feedback is appreciated, and any suggestions for new features will be thoughtfully considered. This is an open-source effort, and I invite community input for ongoing improvements.
+The project is now in a high phase of development with the majority of intended functionalities already in place. While the core features are established, I am contemplating additional features for future updates. I welcome feedback and consider all suggestions as this is an open-source effort. I invite the community's input for ongoing improvements.
 
 ## Introduction
 
@@ -63,11 +63,9 @@ return{
 }
 ```
 
-- For more documentation, see the neovim help `:help gittory-docs`
-
 ## Usage
 
-With the default configuration, simply open NeoVim. Gittory will automatically and efficiently set your current working directory (CWD) to your project's .git/ folder, requiring no additional action on your part.
+With the default configuration, simply open NeoVim. Gittory will automatically and efficiently set your current working directory (CWD) to your project's `.git/` folder, requiring no additional action on your part.
 
 ### Plugin commands
 

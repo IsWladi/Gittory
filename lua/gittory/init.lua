@@ -11,27 +11,8 @@ function M.setup(options)
 	local atStartUp = mergedUserSettings.atStartUp
 	local notifySettings = mergedUserSettings.notifySettings
 
-	-- set notifications function, if not installed, then use the default print function with printMessage function
-	M.notifyPlugin = {}
-	-- set to M.notifyPlugin the first available plugin with a for loop with pcall
-	if notifySettings.availableNotifyPlugins == "" then
-		M.notifyPlugin = { pluginName = "print" }
-	else
-		for _, notifyPluginName in ipairs(notifySettings.availableNotifyPlugins) do
-			if notifyPluginName == "print" then
-				M.notifyPlugin = { pluginName = notifyPluginName }
-				break
-			end
-			local ok, plugin = pcall(require, notifyPluginName)
-			if ok then
-				M.notifyPlugin = { plugin = plugin, pluginName = notifyPluginName }
-				break
-			end
-		end
-	end
-	if M.notifyPlugin.pluginName == nil then -- if all the available plugins are not installed, then use the default print function
-		M.notifyPlugin.pluginName = "print"
-	end
+	-- set notifications function, if not installed, then use the print(message) lua function
+	M.notifyPlugin = require("gittory.utils").getNotifyPlugin(notifySettings.availableNotifyPlugins)
 
 	-- this part is for protect the variable M.backUpPath to be overwritten and don´t lose the backup path
 	local path = vim.loop.cwd()

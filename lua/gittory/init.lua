@@ -1,7 +1,7 @@
 local M = {}
 
 -- for save the path where the user opened Neovim
-M.backUpPath = nil
+local backUpPath = nil
 
 local gitSetup = require("gittory.git_setup") -- charge git functions
 
@@ -12,31 +12,31 @@ function M.setup(options)
 	local notifySettings = mergedUserSettings.notifySettings
 
 	-- set notifications function, if not installed, then use the print(message) lua function
-	M.notifyPlugin = require("gittory.utils").getNotifyPlugin(notifySettings.availableNotifyPlugins)
+	local notifyPlugin = require("gittory.utils").getNotifyPlugin(notifySettings.availableNotifyPlugins)
 
-	-- this part is for protect the variable M.backUpPath to be overwritten and don´t lose the backup path
+	-- this part is for protect the variable backUpPath to be overwritten and don´t lose the backup path
 	local path = vim.loop.cwd()
-	M.backUpPath = path -- for use in the nvim_create_user_command for desactivate gittory
+	backUpPath = path -- for use in the nvim_create_user_command for desactivate gittory
 
 	vim.api.nvim_create_user_command("GittoryInit", function()
 		gitSetup.set_git_root({
 			notify = notifySettings.enabled,
-			notifyPlugin = M.notifyPlugin,
+			notifyPlugin = notifyPlugin,
 		})
 	end, { desc = "Gittory is for set the cwd of your git proyect" })
 
 	vim.api.nvim_create_user_command("GittoryDesactivate", function()
 		gitSetup.set_git_root({
 			notify = notifySettings.enabled,
-			notifyPlugin = M.notifyPlugin,
-			backUpPath = M.backUpPath,
+			notifyPlugin = notifyPlugin,
+			backUpPath = backUpPath,
 		})
 	end, { desc = "Gittory is for set the cwd of your git proyect" })
 
 	if atStartUp == true then
 		gitSetup.set_git_root({
 			notify = notifySettings.enabled,
-			notifyPlugin = M.notifyPlugin,
+			notifyPlugin = notifyPlugin,
 		}) -- Set the root directory of the Git repository for being used at startup of Neovim
 	end
 end

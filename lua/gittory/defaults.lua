@@ -7,6 +7,30 @@ M._defaultOptions = {
     enabled = true,
     -- the user can change the order of the plugins
     availableNotifyPlugins = { "notify", "print" },
+    messagesConfig = {
+      title = "Gittory",
+      commandsMessages = {
+        commonErrors = {
+          notActivatedYet = "The plugin has not been activated yet.",
+        },
+        init = {
+          cmdHead = "activated: ",
+          error = "This is not a Git repository. The actual path is being used.",
+        },
+        deactivate = {
+          cmdHead = "deactivated: ",
+        },
+        reset = {
+          cmdHead = "reseted: ",
+        },
+        root = {
+          cmdHead = "root: ",
+        },
+        backup = {
+          cmdHead = "backup: ",
+        },
+      },
+    },
 	}
 }
 
@@ -18,6 +42,7 @@ function M.mergeUserConfig(userOptions)
   -- tables
   mergedConfig.notifySettings = mergedConfig.notifySettings or M._defaultOptions.notifySettings
   mergedConfig.notifySettings.availableNotifyPlugins = mergedConfig.notifySettings.availableNotifyPlugins or M._defaultOptions.notifySettings.availableNotifyPlugins
+  -- mergedConfig.notifySettings.messagesConfig = mergedConfig.notifySettings.messagesConfig or M._defaultOptions.notifySettings.messagesConfig
 
   -- booleans
   if mergedConfig.atStartUp == nil then

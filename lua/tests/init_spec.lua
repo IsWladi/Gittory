@@ -5,6 +5,10 @@ describe("Plugin setup -> ", function()
 
   GitInit = require("gittory.init")
 
+  -- disable notifications for tests
+  -- otherwise, the tests will fail
+  require("gittory.defaults")._defaultOptions.notifySettings.enabled = false
+
   -- to save the root directory before changing it
   -- it can be used inside the tests
   local rootRepoDir
@@ -18,22 +22,17 @@ describe("Plugin setup -> ", function()
     vim.api.nvim_set_current_dir(rootRepoDir)
   end)
 
-  it("Ensuring :GittoryDeactivate and :GittoryInit Commands Function Properly.", function()
+  it("Ensuring :Gittory deactivate and :Gittory init Commands Function Properly.", function()
     vim.api.nvim_set_current_dir("../Gittory/") -- change the cwd to a subdirectory of the repository
     local subDirPath = vim.fn.getcwd()
-    GitInit.setup({
-      atStartUp = true,
-      notifySettings = {
-        enabled = false,
-      }
-    })
-    --execute the :GittoryDesactivate command
-    vim.cmd("GittoryDesactivate")
-    local afterGittoryDesactivate = vim.fn.getcwd()
-    assert.equals(afterGittoryDesactivate, subDirPath)
+    GitInit.setup()
+    --execute the :Gittory deactivate command
+    vim.cmd("Gittory deactivate")
+    local afterGittoryDeactivate = vim.fn.getcwd()
+    assert.equals(afterGittoryDeactivate, subDirPath)
 
     --execute the :GittoryInit command
-    vim.cmd("GittoryInit")
+    vim.cmd("Gittory init")
     assert.equals(vim.fn.getcwd(), rootRepoDir)
   end)
 
@@ -43,11 +42,7 @@ describe("Plugin setup -> ", function()
     local subDirPath = vim.fn.getcwd()
     GitInit.setup({
       atStartUp = false,
-      notifySettings = {
-        enabled = false,
-      }
     })
-
     local afterGittorySetup = vim.fn.getcwd()
     assert.equals(afterGittorySetup, subDirPath)
   end)
@@ -56,7 +51,7 @@ describe("Plugin setup -> ", function()
   it("Confirming Default Configuration Applies Successfully.", function()
     vim.api.nvim_set_current_dir("../Gittory/") -- change the cwd to a subdirectory of the repository
     local ok, ret = pcall(GitInit.setup, {}) -- setup with no options
-    assert.equals(true, ok) -- call to setup should not raise an error
     assert.equals(rootRepoDir, vim.fn.getcwd()) -- the cwd should change to the root of the repository
+    assert.equals(true, ok) -- call to setup should not raise an error
   end)
 end)

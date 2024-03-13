@@ -46,7 +46,9 @@ describe("Plugin options -> ", function()
       atStartUp = defaultOptions.atStartUp,
       notifySettings = {
       enabled = false,
-      availableNotifyPlugins = defaultOptions.notifySettings.availableNotifyPlugins
+      availableNotifyPlugins = defaultOptions.notifySettings.availableNotifyPlugins,
+      messagesConfig = defaultOptions.notifySettings.messagesConfig
+
       }
     }
 

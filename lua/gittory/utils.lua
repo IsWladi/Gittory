@@ -3,8 +3,13 @@ local M = {}
 -- return a table with the notification plugin name and the plugin itself
 function M.getNotifyPlugin(availableNotifyPlugins)
   local notifyPlugin = {}
-	if availableNotifyPlugins == "" then
-		notifyPlugin = { pluginName = "print" }
+  if type(availableNotifyPlugins) == "string" then
+    local ok, plugin = pcall(require, availableNotifyPlugins)
+    if ok then
+      return {pluginName = availableNotifyPlugins, plugin = plugin}
+    else
+      return { pluginName = "print" }
+    end
 	else
 		for _, notifyPluginName in ipairs(availableNotifyPlugins) do
 			if notifyPluginName == "print" then
@@ -33,13 +38,21 @@ function M.printMessage(opts)
   -- TODO: get the previous folder to add context to the path
   local message = opts.title .. " " .. opts.prompt .. "/" .. projectName .. "/"
 
-  opts.notifyPlugin.plugin.notify(message)
+  if opts.notifyPlugin.pluginName == "print" then
+    print(message)
+  else
+    opts.notifyPlugin.plugin.notify(message)
+  end
 end
 
 
 function M.printInfoMessage(opts)
   local message = opts.title .. ": " .. opts.message
-  opts.notifyPlugin.plugin.notify(message)
+  if opts.notifyPlugin.pluginName == "print" then
+    print(message)
+  else
+    opts.notifyPlugin.plugin.notify(message)
+  end
 end
 
 return M

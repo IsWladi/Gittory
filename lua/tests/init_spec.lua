@@ -31,9 +31,22 @@ describe("Plugin setup -> ", function()
     local afterGittoryDeactivate = vim.fn.getcwd()
     assert.equals(afterGittoryDeactivate, subDirPath)
 
-    --execute the :GittoryInit command
+    --execute the :Gittory init command
     vim.cmd("Gittory init")
     assert.equals(vim.fn.getcwd(), rootRepoDir)
+  end)
+
+  it("Ensuring :Gittory root and :Gittory backup Commands Function Properly.", function()
+    vim.api.nvim_set_current_dir("../Gittory/")
+    local subDirPath = vim.fn.getcwd()
+    GitInit.setup()
+    vim.api.nvim_set_current_dir("../Gittory/")
+    vim.cmd("Gittory root")
+    assert.equals(vim.fn.getcwd(), rootRepoDir) -- it should be the root of the repository
+
+    vim.cmd("Gittory backup")
+    assert.equals(vim.fn.getcwd(), subDirPath) -- it should be the same as the working directory where neovim was opened
+
   end)
 
 

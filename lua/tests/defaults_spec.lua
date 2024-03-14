@@ -63,6 +63,7 @@ describe("Plugin options -> ", function()
       notifySettings = {
         enabled = nil,
         availableNotifyPlugins = nil,
+        messagesConfig = nil,
       }
     }
 

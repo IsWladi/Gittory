@@ -19,7 +19,11 @@ Effortlessly Root Your Workspace – Wherever You Wander in Your Code!
 
 ## Project status
 
-The project is now in a high phase of development with the majority of intended functionalities already in place. While the core features are established, I am contemplating additional features for future updates. I welcome feedback and consider all suggestions as this is an open-source effort. I invite the community's input for ongoing improvements.
+The project is currently in an experimental phase with a Minimal Viable Product (MVP) established on the main branch. Core functionalities are in place, and I am actively developing new and exciting features on separate branches. These features will remain under development until they reach a polished state worthy of integration into the final version of the plugin. Anticipate significant (breaking changes) updates when these new features are released.
+
+Upcoming enhancements include customizable root patterns, potential integration of a popup interface, and the ability to switch between different project scopes (e.g., Node.js, Python, etc.).
+
+Your feedback is invaluable to this open-source project, and all suggestions are thoughtfully considered. I encourage the community to contribute their insights for the continuous evolution of this project.
 
 ## Introduction
 
@@ -41,7 +45,7 @@ Gittory is a straightforward and useful NeoVim plugin. When you open NeoVim, it 
 return{
   {"IsWladi/Gittory",
 
-    branch = "main", -- for tested version of the plugin
+    branch = "main", -- for MVP version of the plugin
 
     dependencies = {
         {"rcarriga/nvim-notify"}, -- optional

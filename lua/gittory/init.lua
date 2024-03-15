@@ -1,6 +1,7 @@
 local M = {}
 
 local backUpPath = nil -- to save the path where the user opened Neovim
+local gitRootPath = nil -- to save the root of the git repository
 
 local gitSetup = require("gittory.git_setup") -- charge git functions
 local utils = require("gittory.utils") -- charge utils functions
@@ -18,9 +19,9 @@ function M.setup(options)
   'Gittory',
   function(opts)
     if opts.args == '' or opts.args == 'init' then
-      if not backUpPath and not GitRootPath then
+      if not backUpPath and not gitRootPath then
         backUpPath = vim.loop.cwd()
-        gitSetup.set_git_root({
+        gitRootPath = gitSetup.set_git_root({
           notify = notifySettings.enabled,
           notifyPlugin = notifyPlugin,
           title = notifySettings.messagesConfig.title,
@@ -35,12 +36,12 @@ function M.setup(options)
         })
       end
     elseif opts.args == 'finish' then
-      if backUpPath and GitRootPath then
+      if backUpPath and gitRootPath then
         -- change the cwd to the path where the user opened Neovim
         vim.api.nvim_set_current_dir(backUpPath)
-        -- reset to nil the backUpPath variable and the GitRootPath variable
+        -- reset to nil the backUpPath variable and the gitRootPath variable
         backUpPath = nil
-        GitRootPath = nil
+        gitRootPath = nil
         --print message
         if notifySettings.enabled then
           utils.printMessage({
@@ -58,7 +59,7 @@ function M.setup(options)
         })
       end
     elseif opts.args == 'toggle' then
-      if backUpPath and GitRootPath then -- finish
+      if backUpPath and gitRootPath then -- finish
         vim.cmd('Gittory finish')
 
       else -- init
@@ -66,17 +67,17 @@ function M.setup(options)
       end
 
     -- restart the plugin
-    -- set to nil the backUpPath variable and the GitRootPath variable
+    -- set to nil the backUpPath variable and the gitRootPath variable
     -- and initialize again
     -- use case:
     --[[ the user wants to change the working directory to another git repository
     so, the user use the 'cd' command to change the working directory to another git repository
     and then use 'Gittory restart' to set the root of the new git repository ]]
     elseif opts.args == 'restart' then
-      if backUpPath and GitRootPath then
-        -- reset to nil the backUpPath variable and the GitRootPath variable
+      if backUpPath and gitRootPath then
+        -- reset to nil the backUpPath variable and the gitRootPath variable
         backUpPath = nil
-        GitRootPath = nil
+        gitRootPath = nil
 
         -- initialize again
         vim.cmd('Gittory init')
@@ -91,8 +92,8 @@ function M.setup(options)
       -- change the cwd to the root of the git repository setted when Gittory init was executed
       -- so, if the user use "cd .." or "cd /" or "cd ~" and then use "Gittory root",
       -- the user will be in the root of the git repository setted when Gittory init was executed (it won´t be lost)
-      if backUpPath and GitRootPath then
-        vim.api.nvim_set_current_dir(GitRootPath)
+      if backUpPath and gitRootPath then
+        vim.api.nvim_set_current_dir(gitRootPath)
 
         --print message
         if notifySettings.enabled then
@@ -115,7 +116,7 @@ function M.setup(options)
     elseif opts.args == 'backup' then
       -- change the cwd to the path where the user opened Neovim
       --if Gittory has´nt been activated, ¿what to do? -> solution?: show a message that says that Gittory has´nt been activated
-      if backUpPath and GitRootPath then
+      if backUpPath and gitRootPath then
         vim.api.nvim_set_current_dir(backUpPath)
 
         if notifySettings.enabled then
@@ -154,7 +155,7 @@ function M.setup(options)
 
 	if atStartUp == true then -- if the user wants to set the root of the git repository at the start up
     backUpPath = vim.loop.cwd()
-		gitSetup.set_git_root({
+		gitRootPath = gitSetup.set_git_root({
 			notify = notifySettings.enabled,
       notifyPlugin = notifyPlugin,
       title = notifySettings.messagesConfig.title,

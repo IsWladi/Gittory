@@ -19,22 +19,25 @@ function M.get_git_root()
 end
 
 -- Function to set the root directory of the Git repository
+--  It returns the root directory of the Git repository
 function M.set_git_root(settings)
 	local is_git = M.isGitRepository()
 	if is_git then
-    GitRootPath = M.get_git_root()
-    vim.api.nvim_set_current_dir(GitRootPath) -- Change the current directory to the root of the Git repository
+    local gitRootPath = M.get_git_root()
+    vim.api.nvim_set_current_dir(gitRootPath) -- Change the current directory to the root of the Git repository
     if settings.notify == true then
       utils.printMessage({
         title = settings.title,
         prompt = settings.prompt,
-        cwd = GitRootPath,
+        cwd = gitRootPath,
         notifyPlugin = settings.notifyPlugin,
       })
     end
+    return gitRootPath
   -- if is not a git repository
 	elseif settings.notify == true then
     settings.notifyPlugin.plugin.notify(settings.title ..": " .. settings.notGitRepositoryMessage)
+    return nil
 	end
 end
 

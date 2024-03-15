@@ -57,6 +57,13 @@ function M.setup(options)
           notifyPlugin = notifyPlugin
         })
       end
+    elseif opts.args == 'toggle' then
+      if backUpPath and GitRootPath then -- finish
+        vim.cmd('Gittory finish')
+
+      else -- init
+        vim.cmd('Gittory init')
+      end
     elseif opts.args == 'root' then
       -- change the cwd to the root of the git repository setted when Gittory init was executed
       -- so, if the user use "cd .." or "cd /" or "cd ~" and then use "Gittory root",
@@ -111,7 +118,7 @@ function M.setup(options)
     -- update the description
     desc ="A custom NeoVim command for the Gittory plugin designed to enhance your workflow by managing the current working directory (cwd) with ease. Use 'init' for setup, 'desactivate' to undo, 'root' to navigate to the Git root, and 'backup' to revert to the initial path. For more information, see :help Gittory.",
     complete = function(ArgLead, CmdLine, CursorPos)
-      local completions = {"init", "finish", "root", "backup"}
+      local completions = {"init", "finish", "toggle", "root", "backup"}
       local matches = {}
       for _, completion in ipairs(completions) do
         if completion:find("^" .. ArgLead) then

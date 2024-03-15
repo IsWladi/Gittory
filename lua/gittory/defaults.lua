@@ -23,6 +23,9 @@ M._defaultOptions = {
         finish = {
           cmdHead = "finish: ",
         },
+        toggle = {
+          cmdHead = "toggle: ",
+        },
         reset = {
           cmdHead = "reset: ",
         },

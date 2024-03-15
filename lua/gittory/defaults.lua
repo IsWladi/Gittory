@@ -14,17 +14,17 @@ M._defaultOptions = {
           notInitializedYet = "The plugin has not been initialized yet.",
         },
         init = {
-          cmdHead = "initialized: ",
+          cmdHead = "init: ",
           errors = {
             notGitRepository = "This is not a Git repository. The actual path is being used.",
             alreadyInitialized = "The plugin has already been initialized.",
           },
         },
-        deactivate = {
-          cmdHead = "deactivated: ",
+        finish = {
+          cmdHead = "finish: ",
         },
         reset = {
-          cmdHead = "reseted: ",
+          cmdHead = "reset: ",
         },
         root = {
           cmdHead = "root: ",

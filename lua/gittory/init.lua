@@ -34,7 +34,7 @@ function M.setup(options)
           notifyPlugin = notifyPlugin
         })
       end
-    elseif opts.args == 'deactivate' then
+    elseif opts.args == 'finish' then
       if backUpPath and GitRootPath then
         -- change the cwd to the path where the user opened Neovim
         vim.api.nvim_set_current_dir(backUpPath)
@@ -46,7 +46,7 @@ function M.setup(options)
           utils.printMessage({
             cwd = vim.loop.cwd(),
             title = mergedUserSettings.notifySettings.messagesConfig.title,
-            prompt = mergedUserSettings.notifySettings.messagesConfig.commandsMessages.deactivate.cmdHead,
+            prompt = mergedUserSettings.notifySettings.messagesConfig.commandsMessages.finish.cmdHead,
             notifyPlugin = notifyPlugin,
           })
         end
@@ -111,7 +111,7 @@ function M.setup(options)
     -- update the description
     desc ="A custom NeoVim command for the Gittory plugin designed to enhance your workflow by managing the current working directory (cwd) with ease. Use 'init' for setup, 'desactivate' to undo, 'root' to navigate to the Git root, and 'backup' to revert to the initial path. For more information, see :help Gittory.",
     complete = function(ArgLead, CmdLine, CursorPos)
-      local completions = {"init", "deactivate", "root", "backup"}
+      local completions = {"init", "finish", "root", "backup"}
       local matches = {}
       for _, completion in ipairs(completions) do
         if completion:find("^" .. ArgLead) then

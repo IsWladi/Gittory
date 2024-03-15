@@ -22,14 +22,14 @@ describe("Plugin setup -> ", function()
     vim.api.nvim_set_current_dir(rootRepoDir)
   end)
 
-  it("Ensuring :Gittory deactivate and :Gittory init Commands Function Properly.", function()
+  it("Ensuring :Gittory finish and :Gittory init Commands Function Properly.", function()
     vim.api.nvim_set_current_dir("../Gittory/") -- change the cwd to a subdirectory of the repository
     local subDirPath = vim.fn.getcwd()
     GitInit.setup()
-    --execute the :Gittory deactivate command
-    vim.cmd("Gittory deactivate")
-    local afterGittoryDeactivate = vim.fn.getcwd()
-    assert.equals(afterGittoryDeactivate, subDirPath)
+    --execute the :Gittory finish command
+    vim.cmd("Gittory finish")
+    local afterGittoryFinish = vim.fn.getcwd()
+    assert.equals(afterGittoryFinish, subDirPath)
 
     --execute the :Gittory init command
     vim.cmd("Gittory init")

@@ -26,8 +26,8 @@ M._defaultOptions = {
         toggle = {
           cmdHead = "toggle: ",
         },
-        reset = {
-          cmdHead = "reset: ",
+        restart = {
+          cmdHead = "restart: ",
         },
         root = {
           cmdHead = "root: ",

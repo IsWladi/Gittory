@@ -64,11 +64,33 @@ function M.setup(options)
       else -- init
         vim.cmd('Gittory init')
       end
+
+    -- restart the plugin
+    -- set to nil the backUpPath variable and the GitRootPath variable
+    -- and initialize again
+    -- use case:
+    --[[ the user wants to change the working directory to another git repository
+    so, the user use the 'cd' command to change the working directory to another git repository
+    and then use 'Gittory restart' to set the root of the new git repository ]]
+    elseif opts.args == 'restart' then
+      if backUpPath and GitRootPath then
+        -- reset to nil the backUpPath variable and the GitRootPath variable
+        backUpPath = nil
+        GitRootPath = nil
+
+        -- initialize again
+        vim.cmd('Gittory init')
+      elseif notifySettings.enabled then
+        utils.printInfoMessage({
+          title = mergedUserSettings.notifySettings.messagesConfig.title,
+          message = mergedUserSettings.notifySettings.messagesConfig.commandsMessages.commonErrors.notInitializedYet,
+          notifyPlugin = notifyPlugin
+        })
+      end
     elseif opts.args == 'root' then
       -- change the cwd to the root of the git repository setted when Gittory init was executed
       -- so, if the user use "cd .." or "cd /" or "cd ~" and then use "Gittory root",
       -- the user will be in the root of the git repository setted when Gittory init was executed (it won´t be lost)
-      --if Gittory has´nt been activated, ¿what to do? -> solution?: show a message that says that Gittory has´nt been activated
       if backUpPath and GitRootPath then
         vim.api.nvim_set_current_dir(GitRootPath)
 
@@ -118,7 +140,7 @@ function M.setup(options)
     -- update the description
     desc ="A custom NeoVim command for the Gittory plugin designed to enhance your workflow by managing the current working directory (cwd) with ease. Use 'init' for setup, 'desactivate' to undo, 'root' to navigate to the Git root, and 'backup' to revert to the initial path. For more information, see :help Gittory.",
     complete = function(ArgLead, CmdLine, CursorPos)
-      local completions = {"init", "finish", "toggle", "root", "backup"}
+      local completions = {"init", "finish", "toggle", "restart", "root", "backup"}
       local matches = {}
       for _, completion in ipairs(completions) do
         if completion:find("^" .. ArgLead) then

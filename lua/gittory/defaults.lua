@@ -11,11 +11,14 @@ M._defaultOptions = {
       title = "Gittory",
       commandsMessages = {
         commonErrors = {
-          notActivatedYet = "The plugin has not been activated yet.",
+          notInitializedYet = "The plugin has not been initialized yet.",
         },
         init = {
-          cmdHead = "activated: ",
-          error = "This is not a Git repository. The actual path is being used.",
+          cmdHead = "initialized: ",
+          errors = {
+            notGitRepository = "This is not a Git repository. The actual path is being used.",
+            alreadyInitialized = "The plugin has already been initialized.",
+          },
         },
         deactivate = {
           cmdHead = "deactivated: ",

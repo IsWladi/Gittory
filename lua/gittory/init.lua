@@ -18,14 +18,22 @@ function M.setup(options)
   'Gittory',
   function(opts)
     if opts.args == '' or opts.args == 'init' then
-      backUpPath = vim.loop.cwd()
-      gitSetup.set_git_root({
-        notify = notifySettings.enabled,
-        notifyPlugin = notifyPlugin,
-        title = notifySettings.messagesConfig.title,
-        prompt = notifySettings.messagesConfig.commandsMessages.init.cmdHead,
-        notGitRepositoryMessage = notifySettings.messagesConfig.commandsMessages.init.error,
-      })
+      if not backUpPath and not GitRootPath then
+        backUpPath = vim.loop.cwd()
+        gitSetup.set_git_root({
+          notify = notifySettings.enabled,
+          notifyPlugin = notifyPlugin,
+          title = notifySettings.messagesConfig.title,
+          prompt = notifySettings.messagesConfig.commandsMessages.init.cmdHead,
+          notGitRepositoryMessage = notifySettings.messagesConfig.commandsMessages.init.errors.notGitRepository,
+        })
+      elseif notifySettings.enabled then
+        utils.printInfoMessage({
+          title = mergedUserSettings.notifySettings.messagesConfig.title,
+          message = mergedUserSettings.notifySettings.messagesConfig.commandsMessages.init.errors.alreadyInitialized,
+          notifyPlugin = notifyPlugin
+        })
+      end
     elseif opts.args == 'deactivate' then
       if backUpPath and GitRootPath then
         -- change the cwd to the path where the user opened Neovim
@@ -45,7 +53,7 @@ function M.setup(options)
       elseif notifySettings.enabled then
         utils.printInfoMessage({
           title = mergedUserSettings.notifySettings.messagesConfig.title,
-          message = mergedUserSettings.notifySettings.messagesConfig.commandsMessages.commonErrors.notActivatedYet,
+          message = mergedUserSettings.notifySettings.messagesConfig.commandsMessages.commonErrors.notInitializedYet,
           notifyPlugin = notifyPlugin
         })
       end
@@ -69,7 +77,7 @@ function M.setup(options)
       elseif notifySettings.enabled then
         utils.printInfoMessage({
           title = mergedUserSettings.notifySettings.messagesConfig.title,
-          message = mergedUserSettings.notifySettings.messagesConfig.commandsMessages.commonErrors.notActivatedYet,
+          message = mergedUserSettings.notifySettings.messagesConfig.commandsMessages.commonErrors.notInitializedYet,
           notifyPlugin = notifyPlugin
         })
 
@@ -92,7 +100,7 @@ function M.setup(options)
       elseif notifySettings.enabled then
         utils.printInfoMessage({
           title = mergedUserSettings.notifySettings.messagesConfig.title,
-          message = mergedUserSettings.notifySettings.messagesConfig.commandsMessages.commonErrors.notActivatedYet,
+          message = mergedUserSettings.notifySettings.messagesConfig.commandsMessages.commonErrors.notInitializedYet,
           notifyPlugin = notifyPlugin
         })
       end

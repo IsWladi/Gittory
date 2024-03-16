@@ -160,8 +160,11 @@ function M.setup(options)
       notifyPlugin = notifyPlugin,
       title = notifySettings.messagesConfig.title,
       prompt = notifySettings.messagesConfig.commandsMessages.init.cmdHead,
-      notGitRepositoryMessage = notifySettings.messagesConfig.commandsMessages.init.error,
+      notGitRepositoryMessage = notifySettings.messagesConfig.commandsMessages.init.errors.notGitRepository,
 		})
+    if gitRootPath == nil then
+      backUpPath = nil
+    end
 	end
 end
 

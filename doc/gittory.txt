@@ -29,12 +29,12 @@ Advanced usage: ~
     2. Use `:Gittory root` to return to the initial project root or
     `:Gittory backup` to revert to the directory from which you launched Neovim.
 
-    Note: If you don't use `:Gittory deactivate` or `:Gittory restart`, the
+    Note: If you don't use `:Gittory finish` or `:Gittory restart`, the
     `:Gittory root` and `:Gittory backup` commands will retain the path
     references set during the initial Gittory setup.
 
     Manage Your Gittory Session: ~
-    1. explain use cases of Gittory init, deactivate and restart (not
+    1. explain use cases of Gittory init, finish and restart (not
     implemented yet)
 
 gittory.setup({opts})                                        *gittory.setup()*
@@ -115,8 +115,8 @@ gittory.setup({opts})                                        *gittory.setup()*
               cmdHead = "activated: ",
               error = "This is not a Git repository. The actual path is being used.",
             },
-            deactivate = {
-              cmdHead = "deactivated: ",
+            finish = {
+              cmdHead = "finish: ",
             },
             reset = {
               cmdHead = "reseted: ",
@@ -137,14 +137,13 @@ COMMAND                                                      *gittory.command*
 
     Arguments:
 
-    [none]
-    init
-    deactivate
-    root
-    backup
+    [none], init  Initializes Gittory
+    root          Restores the git root working directory.
+    finish        Terminates the current Gittory session.
+    backup        Restores the initial working directory upon NeoVim launch.
 
 Note: If Gittory is not activated at startup or with the command `:Gittory init`,
-attempting to use 'deactivate', 'root' or 'backup' will display an informative message
+attempting to use 'finish', 'root' or 'backup' will display an informative message
 indicating that the plugin has not been activated.
 
 

@@ -69,8 +69,15 @@ With the default configuration, simply open NeoVim. Gittory will automatically a
 
 ### Plugin commands
 
-- `:GittoryInit` initializes Gittory and sets the current working directory (cwd) to the root of the git project (this command is not necessary if you have the option `atStartUp = true`).
-- `:GittoryDesactivate` Sets the initial path where Neovim was opened.
+- `:Gittory init`: Initializes Gittory and sets the current working directory (cwd) to the root of the Git project. This command is not required if you have set the option `atStartUp = true`.
+
+- `:Gittory finish`: Restores the initial working directory to the path where Neovim was originally opened, effectively deactivating Gittory.
+
+- `:Gittory toggle`: Toggles Gittory between its active state (root of the Git project) and inactive state (initial working directory).
+
+- `:Gittory root`: Manually restores the working directory to the root of the Git project.
+
+- `:Gittory backup`: Restores the initial working directory to the state it was in when NeoVim was launched.
 
 ## Contributing
 

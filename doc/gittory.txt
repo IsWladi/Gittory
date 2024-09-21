@@ -138,9 +138,10 @@ COMMAND                                                      *gittory.command*
     Arguments:
 
     [none], init  Initializes Gittory
-    root          Restores the git root working directory.
-    finish        Terminates the current Gittory session.
-    backup        Restores the initial working directory upon NeoVim launch.
+    toggle        Toggles between the initialized state and inactive state of Gittory
+    root          Restores the git root working directory
+    finish        Terminates the current Gittory session
+    backup        Restores the initial working directory upon NeoVim launch
 
 Note: If Gittory is not activated at startup or with the command `:Gittory init`,
 attempting to use 'finish', 'root' or 'backup' will display an informative message

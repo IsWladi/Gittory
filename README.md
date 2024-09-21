@@ -19,11 +19,7 @@ Effortlessly Root Your Workspace – Wherever You Wander in Your Code!
 
 ## Project status
 
-The project is currently in an experimental phase with a Minimal Viable Product (MVP) established on the main branch. Core functionalities are in place, and I am actively developing new and exciting features on separate branches. These features will remain under development until they reach a polished state worthy of integration into the final version of the plugin. Anticipate significant (breaking changes) updates when these new features are released.
-
-Upcoming enhancements include customizable root patterns, potential integration of a popup interface, and the ability to switch between different project scopes (e.g., Node.js, Python, etc.).
-
-Your feedback is invaluable to this open-source project, and all suggestions are thoughtfully considered. I encourage the community to contribute their insights for the continuous evolution of this project.
+The project is in a mature development phase, with the core functionalities complete. I am not planning to add new features but will address bugs and issues if they arise. This project follows the KISS principle, prioritizing simplicity and stability. I still welcome feedback and contributions from the community for ongoing improvement.
 
 ## Introduction
 
@@ -58,7 +54,7 @@ return{
 
             -- rcarriga/nvim-notify serves as the default notification plugin. However, alternative plugins can be used, provided they include the <plugin-name>.notify(message) method.            -- you can change the order of priority for the plugins or remove those you don't use.
             -- If one of the specified notification plugins is not installed, the next one in the list will be used.
-            -- "print" is the native notification plugin for Neovim; it will print messages to the command line.
+            -- "print" it will print messages to the command line.
             -- The "print" string is included for clarity. If removed, 'print' will still be used if the other specified plugins are not installed.
             availableNotifyPlugins =  {"notify", "print"} -- for example; you can use "fidget" instead of "notify"
           }

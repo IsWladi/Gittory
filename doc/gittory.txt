@@ -1,0 +1,156 @@
+================================================================================
+INTRODUCTION                                                         *gittory*
+
+Gittory is a plugin that changes your working directory to the root of your
+project if you use Git. It is useful to use with Telescope and Harpoon,
+depending on your needs and workflow.
+
+Getting started with Gittory: ~
+    1. Install and configure Gittory. Consult the `README.MD` for detailed
+    instructions.
+    2. To test the plugin's utility, navigate in the terminal to a subfolder
+    within your project and then launch Neovim.
+    3. If notifications are enabled, Gittory will display a notification
+    showing your current working directory, which should correspond to the
+    root of your project. Alternatively, you can verify your current working
+    directory using the `:pwd` command in Neovim.
+    4. Utilize Telescope, Harpoon, or another plugin to leverage the full
+    scope of your project within your working directory.
+    5. Enjoy enhancing your Neovim experience with Gittory!
+
+Advanced usage: ~
+
+    Efficient Navigation: ~
+
+    1. After Gittory is initialized, use `:cd ~/path/to/other/project` to
+    switch your current working directory (cwd) to another project and access
+    specific files.
+
+    2. Use `:Gittory root` to return to the initial project root or
+    `:Gittory backup` to revert to the directory from which you launched Neovim.
+
+    Note: If you don't use `:Gittory finish` or `:Gittory restart`, the
+    `:Gittory root` and `:Gittory backup` commands will retain the path
+    references set during the initial Gittory setup.
+
+    Manage Your Gittory Session: ~
+    1. explain use cases of Gittory init, finish and restart (not
+    implemented yet)
+
+gittory.setup({opts})                                        *gittory.setup()*
+
+    Setup function to be run by user. Configures the defaults and user
+    configuration.
+
+    Usage:
+    >
+    require('gittory').setup({
+
+      atStartUp = true,
+
+      notifySettings = {
+        enabled = true,
+        availableNotifyPlugins =  {"notify", "print"}
+      }
+
+    })
+<
+    Valid keys for {opts}
+
+                                                      *gittory.opts.atStartUp*
+    atStartUp: ~
+        (boolean) Determines whether the plugin should initialize at Neovim
+        startup.
+
+        Available options are:
+        - true (default)
+        - false
+
+                                                 *gittory.opts.notifySettings*
+    notifySettings: ~
+        (table) Contains settings related to notifications.
+
+        Default: {
+          enabled = true,
+          availableNotifyPlugins =  {"notify", "print"}
+        }
+
+
+                                         *gittory.opts.notifySettings.enabled*
+    notifySettings.enabled: ~
+        (boolean) Enables or disables notification features.
+
+        Available options are:
+        - true (default)
+        - false
+
+                          *gittory.opts.notifySettings.availableNotifyPlugins*
+    notifySettings.availableNotifyPlugins: ~
+        (table of strings) Lists the notification plugins that can be used
+        with Gittory.
+
+        Default: {"notify", "print"}
+
+        Available options are:
+        - "notify" (default): Uses the 'rcarriga/nvim-notify' plugin for rich
+          notifications.
+        - "print": Employs the built-in Lua 'print' function for simple
+          textual notifications.
+
+        Note: Additionally, other notification plugins can be used if they
+        provide a 'plugin.notify(message)' method for sending notifications.
+        This ensures compatibility with Gittory's notification system.
+
+                                  *gittory.opts.notifySettings.messagesConfig*
+    notifySettings.messagesConfig: ~
+        (table) Defines the default settings for message texts used by Gittory.
+
+        Default: {
+          title = "Gittory",
+          commandsMessages = {
+            commonErrors = {
+              notActivatedYet = "The plugin has not been activated yet.",
+            },
+            init = {
+              cmdHead = "activated: ",
+              error = "This is not a Git repository. The actual path is being used.",
+            },
+            finish = {
+              cmdHead = "finish: ",
+            },
+            reset = {
+              cmdHead = "reseted: ",
+            },
+            root = {
+              cmdHead = "root: ",
+            },
+            backup = {
+              cmdHead = "backup: ",
+            },
+          },
+        }
+
+COMMAND                                                      *gittory.command*
+
+    :Gittory {argument}       Command to manage the working directory within
+    NeoVim.
+
+    Arguments:
+
+    [none], init  Initializes Gittory
+    toggle        Toggles between the initialized state and inactive state of Gittory
+    root          Restores the git root working directory
+    finish        Terminates the current Gittory session
+    backup        Restores the initial working directory upon NeoVim launch
+
+Note: If Gittory is not activated at startup or with the command `:Gittory init`,
+attempting to use 'finish', 'root' or 'backup' will display an informative message
+indicating that the plugin has not been activated.
+
+
+
+
+
+
+vim:tw=78:ts=8:ft=help:norl:
+

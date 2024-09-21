@@ -19,39 +19,25 @@ function M.get_git_root()
 end
 
 -- Function to set the root directory of the Git repository
+--  It returns the root directory of the Git repository
 function M.set_git_root(settings)
-	-- When the user calls GittoryDesactivate, the settings.backUpPath is set to the current working directory where the user opened Neovim.
-	-- if it is different from false, then the user wants to desactivate gittory
-	settings.backUpPath = settings.backUpPath or false
-
 	local is_git = M.isGitRepository()
-
 	if is_git then
-		if settings.backUpPath ~= false then -- the user want to desactivate gittory with the command GittoryDesactivate
-			vim.api.nvim_set_current_dir(settings.backUpPath)
-			if settings.notify == true then
-				utils.printResponseMessage(
-					"Actual folder: /" .. settings.backUpPath:match("[^/\\]+$") .. "/",
-					"normal",
-					"succes",
-					settings.notifyPlugin
-				) -- notify the path where the user opened Neovim
-			end
-		else -- the user want to activate gittory with the command GittoryInit or at startup
-			GitRootPath = M.get_git_root()
-			vim.api.nvim_set_current_dir(GitRootPath) -- Change the current directory to the root of the Git repository
-
-			if settings.notify == true then -- notify the root of the actual git repository
-				utils.printResponseMessage("Folder´s project", "show path", "success", settings.notifyPlugin) -- notify the root of the actual git repository
-			end
-		end
+    local gitRootPath = M.get_git_root()
+    vim.api.nvim_set_current_dir(gitRootPath) -- Change the current directory to the root of the Git repository
+    if settings.notify == true then
+      utils.printMessage({
+        title = settings.title,
+        prompt = settings.prompt,
+        cwd = gitRootPath,
+        notifyPlugin = settings.notifyPlugin,
+      })
+    end
+    return gitRootPath
+  -- if is not a git repository
 	elseif settings.notify == true then
-		utils.printResponseMessage(
-			"This is not a Git repository. The actual path is being used.",
-			"normal",
-			"info",
-			settings.notifyPlugin
-		)
+    settings.notifyPlugin.plugin.notify(settings.title ..": " .. settings.notGitRepositoryMessage)
+    return nil
 	end
 end
 

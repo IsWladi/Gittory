@@ -41,7 +41,7 @@ Gittory is a straightforward and useful NeoVim plugin. When you open NeoVim, it 
 return{
   {"IsWladi/Gittory",
 
-    branch = "main", -- for tested version of the plugin
+    branch = "main", -- for MVP version of the plugin
 
     dependencies = {
         {"rcarriga/nvim-notify"}, -- optional

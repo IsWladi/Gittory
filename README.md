@@ -79,6 +79,8 @@ With the default configuration, simply open NeoVim. Gittory will automatically a
 
 - `:Gittory backup`: Restores the initial working directory to the state it was in when NeoVim was launched.
 
+For more detailed documentation about Gittory, you can use the command `:help gittory` within Neovim.
+
 ## Contributing
 
 If you would like to contribute to the development of Gittory, you can do so by submitting a pull request or opening an issue on the project’s GitHub repository.

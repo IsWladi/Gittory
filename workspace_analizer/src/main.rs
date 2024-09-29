@@ -1,36 +1,27 @@
 use clap::Parser;
-use std::fs;
+use std::path::Path;
+use walkdir::{DirEntry, WalkDir};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    ///  define if the program should analyze the directory recursively
-    #[arg(short = 'r', long)]
-    recursive: bool,
+    /// path to analyze
+    #[arg(short = 'p', long, default_value_t = String::from("."))]
+    path: String,
+
+    /// depth of the recursive search
+    #[arg(short = 'd', long, default_value_t = 1)]
+    depth: usize,
 
     /// list of ignored directories and files
     #[arg(short = 'i', long)]
-    ignore: Vec<String>,
+    ignore: Vec<String>, // not implemented yet
 }
 
-#[derive(Debug)]
-struct PathDetails {
-    #[allow(dead_code)]
-    path: String,
-    #[allow(dead_code)]
-    is_dir: bool,
-    #[allow(dead_code)]
-    sub_paths: Option<Vec<PathDetails>>,
-}
-
-impl PathDetails {
-    fn new(path: String, is_dir: bool, sub_paths: Option<Vec<PathDetails>>) -> Self {
-        PathDetails {
-            path,
-            is_dir,
-            sub_paths,
-        }
-    }
+struct ApplicationType {
+    name: String,
+    files: Vec<String>,
+    directories: Vec<String>,
 }
 
 fn main() {
@@ -38,53 +29,54 @@ fn main() {
 
     print!("{:?}\n", args);
 
-    let (dir_paths, files_paths) = get_path_details_from_dir("./", &args.recursive, &args.ignore);
+    let application_types: Vec<ApplicationType> = vec![ApplicationType {
+        name: String::from("Rust"),
+        files: vec![
+            String::from("Cargo.toml"),
+            String::from("Cargo.lock"),
+            String::from("src/*.rs"),
+        ],
+        directories: vec![String::from("target"), String::from("src")],
+    }];
 
-    dbg!(&dir_paths);
-    dbg!(&files_paths);
+    get_dir(&args.path, &args.depth, &application_types);
 }
 
-fn get_path_details_from_dir(
-    dir_path: &str,
-    recursive: &bool,
-    ignore: &Vec<String>,
-) -> (Vec<PathDetails>, Vec<PathDetails>) {
-    let paths = fs::read_dir(dir_path).unwrap();
-
-    let mut dir_paths: Vec<PathDetails> = Vec::new();
-    let mut files_paths: Vec<PathDetails> = Vec::new();
-
-    for path in paths {
-        let unwrapped_path = path.as_ref().unwrap().path();
-
-        if ignore.contains(&unwrapped_path.display().to_string()) {
-            continue;
-        }
-
-        if unwrapped_path.is_dir() && recursive == &true {
-            let (sub_dir_paths, mut sub_files_paths) =
-                get_path_details_from_dir(&unwrapped_path.display().to_string(), recursive, ignore);
-
-            dir_paths.push(PathDetails::new(
-                unwrapped_path.display().to_string(),
-                true,
-                Some(sub_dir_paths),
-            ));
-            files_paths.append(&mut sub_files_paths);
-        } else if unwrapped_path.is_dir() {
-            dir_paths.push(PathDetails::new(
-                unwrapped_path.display().to_string(),
-                true,
-                None,
-            ));
-        } else if unwrapped_path.is_file() {
-            files_paths.push(PathDetails::new(
-                unwrapped_path.display().to_string(),
-                false,
-                None,
-            ));
-        }
+fn get_dir(path: &String, depth: &usize, application_types: &Vec<ApplicationType>) {
+    fn is_hidden(entry: &DirEntry) -> bool {
+        entry
+            .file_name()
+            .to_str()
+            .map(|s| s.starts_with("."))
+            .unwrap_or(false)
     }
 
-    (dir_paths, files_paths)
+    let walker = WalkDir::new(path)
+        .min_depth(1)
+        .max_depth(depth.clone())
+        .into_iter();
+    for entry in walker.filter_entry(|e| !is_hidden(e)) {
+        if let Ok(entry) = entry {
+            //TODO: group by parent directory
+            println!(
+                "Parent dir: {}",
+                get_parent_dir(&entry.path().display().to_string())
+            );
+
+            if &entry.path().is_dir() == &true {
+                println!("{} is a directory\n", &entry.path().display());
+            } else {
+                println!("{} is a file\n", &entry.path().display());
+            }
+        }
+    }
+}
+
+fn get_parent_dir(path: &str) -> &str {
+    let path = Path::new(path);
+    if let Some(parent) = path.parent() {
+        parent.to_str().unwrap_or("")
+    } else {
+        ""
+    }
 }

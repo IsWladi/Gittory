@@ -1,6 +1,9 @@
+mod util;
+use util::{get_parent_dir, get_resource_name};
+
 use clap::{builder::Str, Parser};
+use regex::Regex;
 use std::collections::HashMap;
-use std::path::Path;
 use walkdir::{DirEntry, WalkDir};
 
 #[derive(Parser, Debug)]
@@ -22,8 +25,7 @@ struct Args {
 #[derive(Debug)]
 struct ApplicationType {
     name: String,
-    files: Vec<String>,
-    directories: Vec<String>,
+    resources: Vec<String>,
 }
 
 #[derive(Debug)]
@@ -37,11 +39,21 @@ fn main() {
 
     print!("{:?}\n", args);
 
-    let application_types: Vec<ApplicationType> = vec![ApplicationType {
-        name: String::from("Rust"),
-        files: vec![String::from("Cargo.toml"), String::from("Cargo.lock")],
-        directories: vec![String::from("target"), String::from("src")],
-    }];
+    let application_types: Vec<ApplicationType> = vec![
+        ApplicationType {
+            name: String::from("Rust Crate"),
+            resources: vec![
+                String::from("Cargo.toml"),
+                String::from("Cargo.lock"),
+                String::from("target"),
+                String::from("src"),
+            ],
+        },
+        ApplicationType {
+            name: String::from("Qmk Keyboard"),
+            resources: vec![String::from("keymap.c")],
+        },
+    ];
 
     dbg!(&application_types);
 
@@ -69,30 +81,22 @@ fn get_recognized_applications(
         .max_depth(*depth)
         .into_iter();
 
-    let mut directories_map: HashMap<String, Vec<String>> = HashMap::new();
+    let mut directories_map: HashMap<String, Vec<String>> = HashMap::new(); // <parent_dir, folder_list>
     let mut recognized_applications: Vec<RecognizedApplication> = Vec::new();
 
     let mut previous_parent_dir = String::from("");
 
     for entry in walker.filter_entry(|e| !is_hidden(e)) {
         if let Ok(entry) = entry {
-            let parent_dir = get_parent_dir(entry.path().display().to_string());
-            let resource_name = get_resource_name(entry.path().display().to_string());
+            let parent_dir = get_parent_dir(&entry.path().display().to_string());
+            let resource_name = get_resource_name(&entry.path().display().to_string());
 
             if previous_parent_dir.is_empty() {
                 previous_parent_dir = parent_dir.clone();
             }
 
             if previous_parent_dir != parent_dir {
-                if let Some(folder_list) = directories_map.get(&previous_parent_dir) {
-                    let name = recognize_application(folder_list.clone(), &application_types);
-                    if let Some(name) = name {
-                        recognized_applications.push(RecognizedApplication {
-                            name: name,
-                            path: previous_parent_dir.clone(),
-                        });
-                    }
-                }
+                // if the parent directory changes, update the previous one
                 previous_parent_dir = parent_dir.clone();
             }
 
@@ -103,13 +107,13 @@ fn get_recognized_applications(
         }
     }
 
-    // Reconocer la aplicación para el último directorio
-    if let Some(folder_list) = directories_map.get(&previous_parent_dir) {
+    // Recognize the application for each unique directory
+    for (parent_dir, folder_list) in directories_map {
         let name = recognize_application(folder_list.clone(), &application_types);
         if let Some(name) = name {
             recognized_applications.push(RecognizedApplication {
-                name: name,
-                path: previous_parent_dir.clone(),
+                name,
+                path: parent_dir.clone(),
             });
         }
     }
@@ -124,25 +128,17 @@ fn recognize_application(
     let mut recognized_application: Option<String> = None;
 
     for application_type in application_types {
-        let mut recognized = true;
+        let mut recognized = false;
+        let len_application_resources = application_type.resources.len();
+        let mut num_recognized_resources = 0;
 
-        for file in &application_type.files {
-            if !folder_list.contains(file) {
-                recognized = false;
-                break;
+        for resource in &folder_list {
+            if validate_file_name_regex(resource, &application_type.resources) {
+                num_recognized_resources += 1;
             }
         }
 
-        if recognized {
-            for directory in &application_type.directories {
-                if !folder_list.contains(directory) {
-                    recognized = false;
-                    break;
-                }
-            }
-        }
-
-        if recognized {
+        if num_recognized_resources == len_application_resources {
             recognized_application = Some(application_type.name.clone());
             break;
         }
@@ -154,16 +150,15 @@ fn recognize_application(
     }
 }
 
-fn get_parent_dir(path: String) -> String {
-    let path = Path::new(&path);
-    if let Some(parent) = path.parent() {
-        parent.to_str().unwrap_or("").to_string()
-    } else {
-        "".to_string()
-    }
-}
+fn validate_file_name_regex(file_name: &String, folder_list: &Vec<String>) -> bool {
+    let file_resource_name = get_resource_name(file_name);
+    let re = Regex::new(&format!(r"{}", file_resource_name)).unwrap();
 
-fn get_resource_name(path: String) -> String {
-    let path = Path::new(&path);
-    path.file_name().unwrap().to_str().unwrap_or("").to_string()
+    for folder in folder_list {
+        let folder_resource_name = get_resource_name(folder);
+        if re.is_match(&folder_resource_name) {
+            return true;
+        }
+    }
+    false
 }

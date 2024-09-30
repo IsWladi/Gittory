@@ -1,7 +1,6 @@
 mod util;
 mod workspace_recognizer;
 
-use util::{get_parent_dir, get_resource_name};
 use workspace_recognizer::{get_recognized_applications, ApplicationType, RecognizedApplication};
 
 use clap::Parser;

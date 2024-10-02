@@ -3,13 +3,16 @@ use regex::Regex;
 use std::collections::HashMap;
 use walkdir::{DirEntry, WalkDir};
 
+use serde::{Deserialize, Serialize};
+use serde_json::Result;
+
 #[derive(Debug)]
 pub struct ApplicationType {
     pub name: String,
     pub resources: Vec<String>,
 }
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct RecognizedApplication {
     pub name: String,
     pub path: String,
@@ -121,6 +124,14 @@ fn validate_file_name_regex(file_name: &String, folder_list: &Vec<String>) -> bo
         }
     }
     false
+}
+
+pub fn print_recognized_applications(
+    recognized_applications: &Vec<RecognizedApplication>,
+) -> Result<()> {
+    let json = serde_json::to_string(&recognized_applications)?;
+    println!("{}", json);
+    Ok(())
 }
 
 #[cfg(test)]

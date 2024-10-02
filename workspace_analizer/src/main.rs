@@ -1,7 +1,10 @@
 mod util;
-mod workspace_recognizer;
+mod workspace_analizer;
 
-use workspace_recognizer::{get_recognized_applications, ApplicationType, RecognizedApplication};
+use workspace_analizer::{
+    get_recognized_applications, print_recognized_applications, ApplicationType,
+    RecognizedApplication,
+};
 
 use clap::Parser;
 
@@ -24,8 +27,6 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    print!("{:?}\n", args);
-
     let application_types: Vec<ApplicationType> = vec![
         ApplicationType {
             name: String::from("Rust Crate"),
@@ -42,10 +43,8 @@ fn main() {
         },
     ];
 
-    dbg!(&application_types);
-
     let recognized_applications: Vec<RecognizedApplication> =
         get_recognized_applications(&args.path, &args.depth, &application_types);
 
-    dbg!(recognized_applications);
+    print_recognized_applications(&recognized_applications).expect("Failed to print results");
 }

@@ -1,6 +1,8 @@
 mod util;
 mod workspace_analizer;
 
+use std::sync::Arc;
+
 use workspace_analizer::{
     get_recognized_applications, print_recognized_applications, ApplicationType,
     RecognizedApplication,
@@ -27,7 +29,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let application_types: Vec<ApplicationType> = vec![
+    let application_types: Arc<Vec<ApplicationType>> = Arc::new(vec![
         ApplicationType {
             name: String::from("Rust Crate"),
             resources: vec![
@@ -41,10 +43,10 @@ fn main() {
             name: String::from("Qmk Keyboard"),
             resources: vec![String::from("keymap.c")],
         },
-    ];
+    ]);
 
     let recognized_applications: Vec<RecognizedApplication> =
-        get_recognized_applications(&args.path, &args.depth, &application_types);
+        get_recognized_applications(&args.path, &args.depth, Arc::clone(&application_types));
 
     print_recognized_applications(&recognized_applications).expect("Failed to print results");
 }

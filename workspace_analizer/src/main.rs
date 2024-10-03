@@ -30,19 +30,16 @@ fn main() {
     let args = Args::parse();
 
     let application_types: Arc<Vec<ApplicationType>> = Arc::new(vec![
-        ApplicationType {
-            name: String::from("Rust Crate"),
-            resources: vec![
+        ApplicationType::new(
+            String::from("Rust Crate"),
+            vec![
                 String::from("Cargo.toml"),
                 String::from("Cargo.lock"),
                 String::from("target"),
                 String::from("src"),
             ],
-        },
-        ApplicationType {
-            name: String::from("Qmk Keyboard"),
-            resources: vec![String::from("keymap.c")],
-        },
+        ),
+        ApplicationType::new(String::from("Qmk Keyboard"), vec![String::from("keymap.c")]),
     ]);
 
     let recognized_applications: Vec<RecognizedApplication> =

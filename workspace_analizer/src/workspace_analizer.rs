@@ -164,65 +164,72 @@ pub fn print_recognized_applications(
     Ok(())
 }
 
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//
-//     #[test]
-//     fn test_validate_file_name_regex() {
-//         let file_name = String::from("main.rs");
-//         let folder_list = vec![String::from(r".+\.rs"), String::from("src")];
-//         assert_eq!(validate_file_name_regex(&file_name, &folder_list), true);
-//
-//         let file_name = String::from("src");
-//         assert_eq!(validate_file_name_regex(&file_name, &folder_list), true);
-//     }
+#[cfg(test)]
+mod tests {
 
-//     #[test]
-//     fn test_recognize_application() {
-//         let folder_list = vec![
-//             String::from("Cargo.toml"),
-//             String::from("Cargo.lock"),
-//             String::from("target"),
-//             String::from("src"),
-//             String::from("tests"),
-//         ];
-//         let application_types: Vec<ApplicationType> = vec![
-//             ApplicationType {
-//                 name: String::from("Rust Crate"),
-//                 resources: vec![
-//                     String::from("Cargo.toml"),
-//                     String::from("Cargo.lock"),
-//                     String::from("target"),
-//                     String::from("src"),
-//                 ],
-//             },
-//             ApplicationType {
-//                 name: String::from("Qmk Keymap"),
-//                 resources: vec![String::from("keymap.c"), String::from("config.h")],
-//             },
-//         ];
-//         assert_eq!(
-//             recognize_application(folder_list, &application_types),
-//             Some(String::from("Rust Crate"))
-//         );
-//
-//         let folder_list = vec![String::from("keymap.c")];
-//         assert_eq!(recognize_application(folder_list, &application_types), None);
-//     }
-//
-//     #[test]
-//     fn test_get_recognized_applications() {
-//         let path = String::from("./src"); // this test can fail if the current directory is not the root of the project
-//         let depth = 1;
-//         let application_types: Vec<ApplicationType> = vec![ApplicationType {
-//             name: String::from("Rust files"),
-//             resources: vec![String::from(r".+\.rs")],
-//         }];
-//         let recognized_applications: Vec<RecognizedApplication> =
-//             get_recognized_applications(&path, &depth, &application_types);
-//
-//         assert_eq!(recognized_applications.len(), 1);
-//         assert_eq!(recognized_applications[0].name, "Rust files");
-//     }
-// }
+    use super::*;
+
+    #[test]
+    fn test_validate_file_name_regex() {
+        let file_name = String::from("main.rs");
+        let folder_list = vec![Regex::new(r".+\.rs").unwrap(), Regex::new("src").unwrap()];
+        assert_eq!(validate_file_name_regex(&file_name, &folder_list), true);
+
+        let file_name = String::from("src");
+        assert_eq!(validate_file_name_regex(&file_name, &folder_list), true);
+    }
+
+    #[test]
+    fn test_recognize_application() {
+        let folder_list = vec![
+            String::from("Cargo.toml"),
+            String::from("Cargo.lock"),
+            String::from("target"),
+            String::from("src"),
+            String::from("tests"),
+        ];
+        let application_types: Arc<Vec<ApplicationType>> = Arc::new(vec![
+            ApplicationType {
+                name: String::from("Rust Crate"),
+                resources: vec![
+                    Regex::new("Cargo.toml").unwrap(),
+                    Regex::new("Cargo.lock").unwrap(),
+                    Regex::new("target").unwrap(),
+                    Regex::new("src").unwrap(),
+                ],
+            },
+            ApplicationType {
+                name: String::from("Qmk Keymap"),
+                resources: vec![
+                    Regex::new("keymap.c").unwrap(),
+                    Regex::new("config.h").unwrap(),
+                ],
+            },
+        ]);
+        assert_eq!(
+            recognize_application(folder_list, Arc::clone(&application_types)),
+            Some(String::from("Rust Crate"))
+        );
+
+        let folder_list = vec![String::from("keymap.c")];
+        assert_eq!(
+            recognize_application(folder_list, Arc::clone(&application_types)),
+            None
+        );
+    }
+
+    #[test]
+    fn test_get_recognized_applications() {
+        let path = String::from("./src"); // this test can fail if the current directory is not the root of the project
+        let depth = 1;
+        let application_types: Arc<Vec<ApplicationType>> = Arc::new(vec![ApplicationType {
+            name: String::from("Rust files"),
+            resources: vec![Regex::new(r".+\.rs").unwrap()],
+        }]);
+        let recognized_applications: Vec<RecognizedApplication> =
+            get_recognized_applications(&path, &depth, Arc::clone(&application_types));
+
+        assert_eq!(recognized_applications.len(), 1);
+        assert_eq!(recognized_applications[0].name, "Rust files");
+    }
+}

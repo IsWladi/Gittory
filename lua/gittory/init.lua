@@ -3,6 +3,9 @@ local M = {}
 local backUpPath = nil -- to save the path where the user opened Neovim
 local gitRootPath = nil -- to save the root of the git repository
 
+local workspace_results = {} -- to save the recognized workspaces
+
+local workspaceAnalizer = require("gittory.workspace_analizer") -- charge workspace_analizer functions
 local gitSetup = require("gittory.git_setup") -- charge git functions
 local utils = require("gittory.utils") -- charge utils functions
 
@@ -18,7 +21,14 @@ function M.setup(options)
   vim.api.nvim_create_user_command(
   'Gittory',
   function(opts)
-    if opts.args == '' or opts.args == 'init' then
+    if opts.args == 'workspace' then
+      path = vim.loop.cwd()
+      if #workspace_results == 0 then
+        workspace_results = workspaceAnalizer.fetch_workspaces(path) -- get the workspaces
+      end
+      workspaceAnalizer.open_workspaces(workspace_results) -- get the workspaces
+
+    elseif opts.args == '' or opts.args == 'init' then
       if not backUpPath and not gitRootPath then
         backUpPath = vim.loop.cwd()
         gitRootPath = gitSetup.set_git_root({
@@ -141,7 +151,7 @@ function M.setup(options)
     -- update the description
     desc ="A custom NeoVim command for the Gittory plugin designed to enhance your workflow by managing the current working directory (cwd) with ease. Use 'init' for setup, 'desactivate' to undo, 'root' to navigate to the Git root, and 'backup' to revert to the initial path. For more information, see :help Gittory.",
     complete = function(ArgLead, CmdLine, CursorPos)
-      local completions = {"init", "finish", "toggle", "restart", "root", "backup"}
+      local completions = {"init", "finish", "toggle", "restart", "root", "backup", "workspace"}
       local matches = {}
       for _, completion in ipairs(completions) do
         if completion:find("^" .. ArgLead) then

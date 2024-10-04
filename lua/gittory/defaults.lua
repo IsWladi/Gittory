@@ -37,7 +37,10 @@ M._defaultOptions = {
         },
       },
     },
-	}
+	},
+  workspace_analizer = {
+    enabled = false
+  }
 }
 
 function M.mergeUserConfig(userOptions)

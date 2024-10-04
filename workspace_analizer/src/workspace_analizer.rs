@@ -1,6 +1,10 @@
 use super::util::{get_parent_dir, get_resource_name};
 use regex::Regex;
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    sync::{mpsc, Arc},
+    thread,
+};
 use walkdir::{DirEntry, WalkDir};
 
 use serde::{Deserialize, Serialize};
@@ -9,7 +13,20 @@ use serde_json::Result;
 #[derive(Debug)]
 pub struct ApplicationType {
     pub name: String,
-    pub resources: Vec<String>,
+    pub resources: Vec<Regex>,
+}
+
+impl ApplicationType {
+    pub fn new(name: String, resources: Vec<String>) -> Self {
+        let compiled_resources = resources
+            .iter()
+            .map(|pattern| Regex::new(pattern).unwrap())
+            .collect();
+        ApplicationType {
+            name,
+            resources: compiled_resources,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -25,7 +42,7 @@ pub struct RecognizedApplication {
 pub fn get_recognized_applications(
     path: &String,
     depth: &usize,
-    application_types: &Vec<ApplicationType>,
+    application_types: Arc<Vec<ApplicationType>>,
 ) -> Vec<RecognizedApplication> {
     fn is_hidden(entry: &DirEntry) -> bool {
         entry
@@ -41,7 +58,6 @@ pub fn get_recognized_applications(
         .into_iter();
 
     let mut directories_map: HashMap<String, Vec<String>> = HashMap::new(); // <parent_dir, folder_list>
-    let mut recognized_applications: Vec<RecognizedApplication> = Vec::new();
 
     let mut previous_parent_dir = String::from("");
 
@@ -66,15 +82,30 @@ pub fn get_recognized_applications(
         }
     }
 
+    // channel to send the recognized applications
+    let (tx, rx) = mpsc::channel();
+    let mut recognized_applications: Vec<RecognizedApplication> = Vec::new();
+
     // Recognize the application for each unique directory
     for (parent_dir, folder_list) in directories_map {
-        let name = recognize_application(folder_list.clone(), &application_types);
-        if let Some(name) = name {
-            recognized_applications.push(RecognizedApplication {
-                name,
-                path: parent_dir.clone(),
-            });
-        }
+        let transmisor = tx.clone();
+        let application_types = Arc::clone(&application_types);
+        thread::spawn(move || {
+            let name = recognize_application(folder_list.clone(), application_types);
+            if let Some(name) = name {
+                let recognized_application = RecognizedApplication {
+                    name,
+                    path: parent_dir.clone(),
+                };
+                transmisor.send(recognized_application).unwrap();
+            }
+        });
+    }
+
+    drop(tx); // drop the transmitter to close the channel
+
+    for received in rx {
+        recognized_applications.push(received);
     }
 
     recognized_applications
@@ -85,11 +116,11 @@ pub fn get_recognized_applications(
 /// application_types: list of application types to recognize
 fn recognize_application(
     folder_list: Vec<String>,
-    application_types: &Vec<ApplicationType>,
+    application_types: Arc<Vec<ApplicationType>>,
 ) -> Option<String> {
     let mut recognized_application: Option<String> = None;
 
-    for application_type in application_types {
+    for application_type in Arc::clone(&application_types).iter() {
         let len_application_resources = application_type.resources.len();
         let mut num_recognized_resources = 0;
 
@@ -114,12 +145,11 @@ fn recognize_application(
 /// Function to validate if the file is at least one of the resources in the folder
 /// file_name: name of the file to validate
 /// folder_list: list of resources in the folder
-fn validate_file_name_regex(file_name: &String, folder_list: &Vec<String>) -> bool {
+fn validate_file_name_regex(file_name: &String, folder_list: &Vec<Regex>) -> bool {
     let file_resource_name = get_resource_name(file_name);
 
     for folder in folder_list {
-        let re = Regex::new(&format!(r"{}", folder)).unwrap();
-        if re.is_match(&file_resource_name) {
+        if folder.is_match(&file_resource_name) {
             return true;
         }
     }
@@ -136,12 +166,13 @@ pub fn print_recognized_applications(
 
 #[cfg(test)]
 mod tests {
+
     use super::*;
 
     #[test]
     fn test_validate_file_name_regex() {
         let file_name = String::from("main.rs");
-        let folder_list = vec![String::from(r".+\.rs"), String::from("src")];
+        let folder_list = vec![Regex::new(r".+\.rs").unwrap(), Regex::new("src").unwrap()];
         assert_eq!(validate_file_name_regex(&file_name, &folder_list), true);
 
         let file_name = String::from("src");
@@ -157,40 +188,46 @@ mod tests {
             String::from("src"),
             String::from("tests"),
         ];
-        let application_types: Vec<ApplicationType> = vec![
+        let application_types: Arc<Vec<ApplicationType>> = Arc::new(vec![
             ApplicationType {
                 name: String::from("Rust Crate"),
                 resources: vec![
-                    String::from("Cargo.toml"),
-                    String::from("Cargo.lock"),
-                    String::from("target"),
-                    String::from("src"),
+                    Regex::new("Cargo.toml").unwrap(),
+                    Regex::new("Cargo.lock").unwrap(),
+                    Regex::new("target").unwrap(),
+                    Regex::new("src").unwrap(),
                 ],
             },
             ApplicationType {
                 name: String::from("Qmk Keymap"),
-                resources: vec![String::from("keymap.c"), String::from("config.h")],
+                resources: vec![
+                    Regex::new("keymap.c").unwrap(),
+                    Regex::new("config.h").unwrap(),
+                ],
             },
-        ];
+        ]);
         assert_eq!(
-            recognize_application(folder_list, &application_types),
+            recognize_application(folder_list, Arc::clone(&application_types)),
             Some(String::from("Rust Crate"))
         );
 
         let folder_list = vec![String::from("keymap.c")];
-        assert_eq!(recognize_application(folder_list, &application_types), None);
+        assert_eq!(
+            recognize_application(folder_list, Arc::clone(&application_types)),
+            None
+        );
     }
 
     #[test]
     fn test_get_recognized_applications() {
         let path = String::from("./src"); // this test can fail if the current directory is not the root of the project
         let depth = 1;
-        let application_types: Vec<ApplicationType> = vec![ApplicationType {
+        let application_types: Arc<Vec<ApplicationType>> = Arc::new(vec![ApplicationType {
             name: String::from("Rust files"),
-            resources: vec![String::from(r".+\.rs")],
-        }];
+            resources: vec![Regex::new(r".+\.rs").unwrap()],
+        }]);
         let recognized_applications: Vec<RecognizedApplication> =
-            get_recognized_applications(&path, &depth, &application_types);
+            get_recognized_applications(&path, &depth, Arc::clone(&application_types));
 
         assert_eq!(recognized_applications.len(), 1);
         assert_eq!(recognized_applications[0].name, "Rust files");
